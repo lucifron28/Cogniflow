@@ -50,3 +50,91 @@
 .sidebar-section {
   padding-bottom: 0.5rem;
 }
+
+.sidebar-header {
+  border-bottom: 1px solid var(--color-cyber-accent);
+}
+
+.sidebar-footer {
+  border-top: 1px solid var(--color-cyber-accent);
+}
+
+.sidebar button.hover-bg {
+  background-color: rgba(0, 242, 254, 0.1);
+}
+
+.nav-section-border {
+  border-top: 1px solid rgba(0, 242, 254, 0.2);
+}
+
+.sidebar a.nav-link {
+  background-color: rgba(0, 242, 254, 0.05);
+}
+
+:host-context(.electric-sky) .sidebar {
+  background: var(--color-electric-white) !important;
+  border-right-color: var(--color-electric-cyan) !important;
+  color: #1f2937 !important;
+}
+
+:host-context(.electric-sky) .sidebar-header,
+:host-context(.electric-sky) .sidebar-header h2 {
+  color: #1f2937 !important;
+  text-shadow: none !important;
+}
+
+:host-context(.electric-sky) .sidebar-footer {
+  border-top-color: var(--color-electric-light-gray) !important;
+}
+
+:host-context(.electric-sky) .sidebar-content {
+  scrollbar-color: var(--color-electric-cyan) transparent !important;
+  color: #1f2937 !important;
+}
+
+:host-context(.electric-sky) .sidebar-content::-webkit-scrollbar-thumb {
+  background-color: var(--color-electric-cyan) !important;
+}
+
+:host-context(.electric-sky) .resize-handle:hover,
+:host-context(.electric-sky) .resize-handle.resizing {
+  background-color: var(--color-electric-cyan) !important;
+}
+
+:host-context(.electric-sky) .sidebar-section button,
+:host-context(.electric-sky) .sidebar-section span,
+:host-context(.electric-sky) .sidebar-section p {
+  color: #4b5563 !important;
+}
+
+:host-context(.electric-sky) .sidebar svg {
+  color: #4b5563 !important;
+}
+
+:host-context(.electric-sky) .sidebar a {
+  color: #1f2937 !important;
+}
+
+:host-context(.electric-sky) .sidebar a:hover {
+  background-color: rgba(0, 212, 255, 0.1) !important;
+}
+
+:host-context(.electric-sky) .sidebar-header {
+  border-bottom-color: var(--color-electric-light-gray) !important;
+}
+
+:host-context(.electric-sky) .sidebar-footer {
+  border-top-color: var(--color-electric-light-gray) !important;
+}
+
+:host-context(.electric-sky) .sidebar button.hover-bg {
+  background-color: rgba(0, 212, 255, 0.1) !important;
+}
+
+:host-context(.electric-sky) .nav-section-border {
+  border-top-color: var(--color-electric-light-gray) !important;
+}
+
+:host-context(.electric-sky) .sidebar a.nav-link {
+  background-color: rgba(0, 212, 255, 0.05) !important;
+}
