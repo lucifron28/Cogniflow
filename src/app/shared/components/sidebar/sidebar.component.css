@@ -1,0 +1,52 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  transition: width 0.3s ease;
+  border-right: 1px solid var(--color-cyber-accent);
+  background: var(--color-cyber-black);
+  z-index: 10;
+}
+
+.sidebar.collapsed {
+  min-width: 60px;
+}
+
+.resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  background-color: transparent;
+  transition: background-color 0.2s;
+}
+
+.resize-handle:hover,
+.resize-handle.resizing {
+  background-color: var(--color-cyber-accent);
+}
+
+.sidebar-content {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-cyber-accent) transparent;
+}
+
+.sidebar-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  background-color: var(--color-cyber-accent);
+  border-radius: 3px;
+}
+
+.sidebar-section {
+  padding-bottom: 0.5rem;
+}
