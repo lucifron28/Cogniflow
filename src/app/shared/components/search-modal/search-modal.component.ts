@@ -1,7 +1,8 @@
-import { Component, signal, computed, HostListener } from '@angular/core';
+import { Component, signal, computed, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ThemeService } from '../../../core/services/theme.service';
 
 interface SearchResult {
   type: 'note' | 'task' | 'tag';
@@ -19,6 +20,8 @@ interface SearchResult {
   styleUrl: './search-modal.component.css'
 })
 export class SearchModalComponent {
+  themeService = inject(ThemeService);
+  
   isOpen = signal(false);
   searchQuery = signal('');
   selectedIndex = signal(0);
