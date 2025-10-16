@@ -15,13 +15,14 @@ import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-bash';
 import { NotesService } from '../../../services/notes.service';
 import { Note } from '../../../core/models/note.model';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 
 type EditorView = 'split' | 'editor' | 'preview';
 
 @Component({
   selector: 'app-note-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IconComponent],
   templateUrl: './note-editor.component.html',
   styleUrl: './note-editor.component.css',
   encapsulation: ViewEncapsulation.None
