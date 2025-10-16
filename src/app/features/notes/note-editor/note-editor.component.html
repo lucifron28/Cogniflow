@@ -1,14 +1,29 @@
 <div class="flex flex-col h-screen">
     <!-- Note Editor Header -->
-    <div class="editor-header">
-        <div class="container-header">
-            <button (click)="goBack()" class="btn-back">
+    <div class="sticky top-0 z-20 border-b px-6 py-4 transition-colors"
+        [class.bg-cyber-gray]="themeService.theme() === 'cyber-glow'"
+        [class.border-cyber-accent]="themeService.theme() === 'cyber-glow'"
+        [class.bg-electric-white]="themeService.theme() === 'electric-sky'"
+        [class.border-electric-accent]="themeService.theme() === 'electric-sky'">
+        <div class="flex items-center gap-4">
+            <button (click)="goBack()"
+                class="flex items-center gap-2 px-4 py-2 rounded-lg border text-sm transition-all cursor-pointer"
+                [class.bg-cyber-accent/10]="themeService.theme() === 'cyber-glow'"
+                [class.border-cyber-accent]="themeService.theme() === 'cyber-glow'"
+                [class.text-cyber-accent]="themeService.theme() === 'cyber-glow'"
+                [class.hover:bg-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
+                [class.hover:shadow-[0_0_10px_rgba(0,242,254,0.3)]]="themeService.theme() === 'cyber-glow'"
+                [class.bg-electric-accent/10]="themeService.theme() === 'electric-sky'"
+                [class.border-electric-accent]="themeService.theme() === 'electric-sky'"
+                [class.text-electric-accent]="themeService.theme() === 'electric-sky'"
+                [class.hover:bg-electric-accent/20]="themeService.theme() === 'electric-sky'">
                 <app-icon name="back-arrow" size="lg"></app-icon>
                 Back to Notes
             </button>
 
             @if (errorMessage()) {
-            <div class="error-message">
+            <div
+                class="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-500/50 bg-red-500/10 text-red-400 text-sm animate-slideIn">
                 <app-icon name="alert" size="md"></app-icon>
                 {{ errorMessage() }}
             </div>
@@ -16,52 +31,105 @@
 
             <div class="flex items-center gap-4 flex-1">
                 <!-- View Toggle Buttons -->
-                <div class="view-toggle-group">
-                    <button (click)="setView('split')" [class.active]="editorView() === 'split'" class="view-toggle-btn"
+                <div class="flex gap-1 p-1 rounded-lg border transition-colors"
+                    [class.bg-cyber-accent/5]="themeService.theme() === 'cyber-glow'"
+                    [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
+                    [class.bg-electric-accent/5]="themeService.theme() === 'electric-sky'"
+                    [class.border-electric-accent/20]="themeService.theme() === 'electric-sky'">
+                    <button (click)="setView('split')"
+                        class="flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-all cursor-pointer"
+                        [class.opacity-60]="editorView() !== 'split'"
+                        [class.hover:opacity-100]="editorView() !== 'split'"
+                        [class.hover:bg-cyber-accent/10]="editorView() !== 'split' && themeService.theme() === 'cyber-glow'"
+                        [class.hover:bg-electric-accent/10]="editorView() !== 'split' && themeService.theme() === 'electric-sky'"
+                        [class.bg-cyber-accent]="editorView() === 'split' && themeService.theme() === 'cyber-glow'"
+                        [class.text-cyber-black]="editorView() === 'split' && themeService.theme() === 'cyber-glow'"
+                        [class.bg-electric-accent]="editorView() === 'split' && themeService.theme() === 'electric-sky'"
+                        [class.text-electric-dark-blue]="editorView() === 'split' && themeService.theme() === 'electric-sky'"
+                        [class.font-semibold]="editorView() === 'split'"
+                        [class.text-cyber-accent]="editorView() !== 'split' && themeService.theme() === 'cyber-glow'"
+                        [class.text-electric-accent]="editorView() !== 'split' && themeService.theme() === 'electric-sky'"
                         title="Split View (Cmd+E)">
                         <app-icon name="split-view" size="md"></app-icon>
                         Split
                     </button>
-                    <button (click)="setView('editor')" [class.active]="editorView() === 'editor'"
-                        class="view-toggle-btn" title="Editor Only">
+                    <button (click)="setView('editor')"
+                        class="flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-all cursor-pointer"
+                        [class.opacity-60]="editorView() !== 'editor'"
+                        [class.hover:opacity-100]="editorView() !== 'editor'"
+                        [class.hover:bg-cyber-accent/10]="editorView() !== 'editor' && themeService.theme() === 'cyber-glow'"
+                        [class.hover:bg-electric-accent/10]="editorView() !== 'editor' && themeService.theme() === 'electric-sky'"
+                        [class.bg-cyber-accent]="editorView() === 'editor' && themeService.theme() === 'cyber-glow'"
+                        [class.text-cyber-black]="editorView() === 'editor' && themeService.theme() === 'cyber-glow'"
+                        [class.bg-electric-accent]="editorView() === 'editor' && themeService.theme() === 'electric-sky'"
+                        [class.text-electric-dark-blue]="editorView() === 'editor' && themeService.theme() === 'electric-sky'"
+                        [class.font-semibold]="editorView() === 'editor'"
+                        [class.text-cyber-accent]="editorView() !== 'editor' && themeService.theme() === 'cyber-glow'"
+                        [class.text-electric-accent]="editorView() !== 'editor' && themeService.theme() === 'electric-sky'"
+                        title="Editor Only">
                         <app-icon name="editor" size="md"></app-icon>
                         Editor
                     </button>
-                    <button (click)="setView('preview')" [class.active]="editorView() === 'preview'"
-                        class="view-toggle-btn" title="Preview Only">
+                    <button (click)="setView('preview')"
+                        class="flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-all cursor-pointer"
+                        [class.opacity-60]="editorView() !== 'preview'"
+                        [class.hover:opacity-100]="editorView() !== 'preview'"
+                        [class.hover:bg-cyber-accent/10]="editorView() !== 'preview' && themeService.theme() === 'cyber-glow'"
+                        [class.hover:bg-electric-accent/10]="editorView() !== 'preview' && themeService.theme() === 'electric-sky'"
+                        [class.bg-cyber-accent]="editorView() === 'preview' && themeService.theme() === 'cyber-glow'"
+                        [class.text-cyber-black]="editorView() === 'preview' && themeService.theme() === 'cyber-glow'"
+                        [class.bg-electric-accent]="editorView() === 'preview' && themeService.theme() === 'electric-sky'"
+                        [class.text-electric-dark-blue]="editorView() === 'preview' && themeService.theme() === 'electric-sky'"
+                        [class.font-semibold]="editorView() === 'preview'"
+                        [class.text-cyber-accent]="editorView() !== 'preview' && themeService.theme() === 'cyber-glow'"
+                        [class.text-electric-accent]="editorView() !== 'preview' && themeService.theme() === 'electric-sky'"
+                        title="Preview Only">
                         <app-icon name="preview" size="md"></app-icon>
                         Preview
                     </button>
                 </div>
 
                 <!-- Stats -->
-                <div class="stats-display">
-                    <span class="stat-item">{{ wordCount() }} words</span>
-                    <span class="stat-divider">•</span>
-                    <span class="stat-item">{{ charCount() }} chars</span>
+                <div class="flex items-center gap-2 text-xs opacity-60 ml-auto">
+                    <span>{{ wordCount() }} words</span>
+                    <span>•</span>
+                    <span>{{ charCount() }} chars</span>
                     @if (detectedBacklinks().length > 0) {
-                    <span class="stat-divider">•</span>
-                    <span class="stat-item">{{ detectedBacklinks().length }} links</span>
+                    <span>•</span>
+                    <span>{{ detectedBacklinks().length }} links</span>
                     }
                     @if (detectedTasks().length > 0) {
-                    <span class="stat-divider">•</span>
-                    <span class="stat-item">{{ detectedTasks().length }} tasks</span>
+                    <span>•</span>
+                    <span>{{ detectedTasks().length }} tasks</span>
                     }
                 </div>
 
                 <!-- Save Button & Status -->
-                <div class="save-section">
+                <div class="flex items-center gap-3">
                     @if (lastSaved()) {
-                    <span class="save-status">Saved {{ lastSaved()!.toLocaleTimeString() }}</span>
+                    <span class="text-xs opacity-60">Saved {{ lastSaved()!.toLocaleTimeString() }}</span>
                     }
 
                     @if (!isNewNote()) {
-                    <button (click)="deleteNote()" [disabled]="isSaving()" class="btn-delete" title="Delete Note">
+                    <button (click)="deleteNote()" [disabled]="isSaving()"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg border text-sm transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        [class.bg-red-500/10]="!isSaving()" [class.border-red-500]="!isSaving()"
+                        [class.text-red-400]="!isSaving()" [class.hover:bg-red-500/20]="!isSaving()"
+                        title="Delete Note">
                         <app-icon name="delete" size="md"></app-icon>
                     </button>
                     }
 
-                    <button (click)="saveNote()" [disabled]="isSaving() || isLoading()" class="btn-save">
+                    <button (click)="saveNote()" [disabled]="isSaving() || isLoading()"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg border text-sm transition-all cursor-pointer font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        [class.bg-cyber-accent]="themeService.theme() === 'cyber-glow' && !isSaving()"
+                        [class.text-cyber-black]="themeService.theme() === 'cyber-glow' && !isSaving()"
+                        [class.border-cyber-accent]="themeService.theme() === 'cyber-glow'"
+                        [class.hover:shadow-[0_0_20px_rgba(0,242,254,0.5)]]="themeService.theme() === 'cyber-glow' && !isSaving()"
+                        [class.bg-electric-accent]="themeService.theme() === 'electric-sky' && !isSaving()"
+                        [class.text-white]="themeService.theme() === 'electric-sky' && !isSaving()"
+                        [class.border-electric-accent]="themeService.theme() === 'electric-sky'"
+                        [class.hover:shadow-[0_0_20px_rgba(59,130,246,0.5)]]="themeService.theme() === 'electric-sky' && !isSaving()">
                         @if (isSaving()) {
                         <app-icon name="spinner" size="md"></app-icon>
                         Saving...
@@ -76,45 +144,77 @@
     </div>
 
     <!-- Note Title -->
-    <div class="title-section">
-        <input type="text" [(ngModel)]="title" placeholder="Note title..." class="title-input" />
+    <div class="px-6 py-4 border-b" [class.bg-cyber-darker]="themeService.theme() === 'cyber-glow'"
+        [class.bg-electric-light]="themeService.theme() === 'electric-sky'"
+        [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
+        [class.border-electric-accent/20]="themeService.theme() === 'electric-sky'">
+        <input type="text" [(ngModel)]="title" placeholder="Note title..."
+            class="w-full text-2xl font-bold bg-transparent outline-none"
+            [class.text-cyber-text]="themeService.theme() === 'cyber-glow'"
+            [class.text-electric-text]="themeService.theme() === 'electric-sky'"
+            [class.placeholder-cyber-text/40]="themeService.theme() === 'cyber-glow'"
+            [class.placeholder-electric-text/40]="themeService.theme() === 'electric-sky'" />
     </div>
 
     <!-- Editor Container -->
-    <div class="editor-container" (keydown)="handleKeyDown($event)">
+    <div class="flex-1 overflow-hidden" [class.bg-cyber-black]="themeService.theme() === 'cyber-glow'"
+        [class.bg-electric-white]="themeService.theme() === 'electric-sky'" (keydown)="handleKeyDown($event)">
 
         <!-- Loading State -->
         @if (isLoading()) {
-        <div class="loading-container">
-            <app-icon name="spinner" size="xl" customClass="w-12 h-12"></app-icon>
-            <p class="loading-text">Loading note...</p>
+        <div class="flex flex-col items-center justify-center h-full gap-4">
+            <app-icon name="spinner" size="xl" customClass="w-12 h-12"
+                [class.text-cyber-accent]="themeService.theme() === 'cyber-glow'"
+                [class.text-electric-accent]="themeService.theme() === 'electric-sky'"></app-icon>
+            <p class="text-lg" [class.text-cyber-text/60]="themeService.theme() === 'cyber-glow'"
+                [class.text-electric-text/60]="themeService.theme() === 'electric-sky'">Loading note...</p>
         </div>
         }
 
         <!-- Split View -->
         @if (!isLoading() && editorView() === 'split') {
-        <div class="split-view">
+        <div class="flex h-full">
             <!-- Editor Pane -->
-            <div class="editor-pane">
-                <div class="pane-label">
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <div class="flex items-center gap-2 px-4 py-2 text-sm font-medium border-b"
+                    [class.bg-cyber-darker]="themeService.theme() === 'cyber-glow'"
+                    [class.bg-electric-light]="themeService.theme() === 'electric-sky'"
+                    [class.text-cyber-text/70]="themeService.theme() === 'cyber-glow'"
+                    [class.text-electric-text/70]="themeService.theme() === 'electric-sky'"
+                    [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
+                    [class.border-electric-accent/20]="themeService.theme() === 'electric-sky'">
                     <app-icon name="pencil" size="md"></app-icon>
                     Markdown Editor
                 </div>
                 <textarea [(ngModel)]="content" placeholder="Start writing in markdown..."
-                    class="markdown-textarea"></textarea>
+                    class="flex-1 w-full p-6 bg-transparent resize-none outline-none font-mono"
+                    [class.text-cyber-text]="themeService.theme() === 'cyber-glow'"
+                    [class.text-electric-text]="themeService.theme() === 'electric-sky'"
+                    [class.placeholder-cyber-text/40]="themeService.theme() === 'cyber-glow'"
+                    [class.placeholder-electric-text/40]="themeService.theme() === 'electric-sky'"></textarea>
             </div>
 
             <!-- Divider -->
-            <div class="divider"></div>
+            <div class="w-px" [class.bg-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
+                [class.bg-electric-accent/20]="themeService.theme() === 'electric-sky'"></div>
 
             <!-- Preview Pane -->
-            <div class="preview-pane">
-                <div class="pane-label">
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <div class="flex items-center gap-2 px-4 py-2 text-sm font-medium border-b"
+                    [class.bg-cyber-darker]="themeService.theme() === 'cyber-glow'"
+                    [class.bg-electric-light]="themeService.theme() === 'electric-sky'"
+                    [class.text-cyber-text/70]="themeService.theme() === 'cyber-glow'"
+                    [class.text-electric-text/70]="themeService.theme() === 'electric-sky'"
+                    [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
+                    [class.border-electric-accent/20]="themeService.theme() === 'electric-sky'">
                     <app-icon name="eye" size="md"></app-icon>
                     Live Preview
                 </div>
-                <div class="markdown-preview" (click)="handlePreviewClick($event)">
-                    <div [innerHTML]="renderedHtml()"></div>
+                <div class="flex-1 overflow-auto p-6 prose prose-invert max-w-none"
+                    [class.text-cyber-text]="themeService.theme() === 'cyber-glow'"
+                    [class.text-electric-text]="themeService.theme() === 'electric-sky'"
+                    (click)="handlePreviewClick($event)">
+                    <div class="markdown-preview" [innerHTML]="renderedHtml()"></div>
                 </div>
             </div>
         </div>
@@ -122,56 +222,52 @@
 
         <!-- Editor Only View -->
         @if (!isLoading() && editorView() === 'editor') {
-        <div class="single-pane">
+        <div class="h-full">
             <textarea [(ngModel)]="content" placeholder="Start writing in markdown..."
-                class="markdown-textarea full-height"></textarea>
+                class="w-full h-full p-6 bg-transparent resize-none outline-none font-mono"
+                [class.text-cyber-text]="themeService.theme() === 'cyber-glow'"
+                [class.text-electric-text]="themeService.theme() === 'electric-sky'"
+                [class.placeholder-cyber-text/40]="themeService.theme() === 'cyber-glow'"
+                [class.placeholder-electric-text/40]="themeService.theme() === 'electric-sky'"></textarea>
         </div>
         }
 
         <!-- Preview Only View -->
         @if (!isLoading() && editorView() === 'preview') {
-        <div class="single-pane">
-            <div class="markdown-preview full-height" (click)="handlePreviewClick($event)">
-                <div [innerHTML]="renderedHtml()"></div>
+        <div class="h-full">
+            <div class="h-full overflow-auto p-6 prose prose-invert max-w-none"
+                [class.text-cyber-text]="themeService.theme() === 'cyber-glow'"
+                [class.text-electric-text]="themeService.theme() === 'electric-sky'"
+                (click)="handlePreviewClick($event)">
+                <div class="markdown-preview" [innerHTML]="renderedHtml()"></div>
             </div>
         </div>
         }
     </div>
 
     <!-- Sidebar Info Panel -->
-    @if (detectedBacklinks().length > 0 || detectedTasks().length > 0) {
-    <div class="info-panel">
-        @if (detectedBacklinks().length > 0) {
-        <div class="info-section">
-            <h3 class="info-title">Linked Notes</h3>
-            <ul class="info-list">
+    @if (detectedBacklinks().length > 0) {
+    <div class="w-64 border-l overflow-y-auto" [class.bg-cyber-darker]="themeService.theme() === 'cyber-glow'"
+        [class.bg-electric-light]="themeService.theme() === 'electric-sky'"
+        [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
+        [class.border-electric-accent/20]="themeService.theme() === 'electric-sky'">
+        <div class="p-4" [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
+            [class.border-electric-accent/20]="themeService.theme() === 'electric-sky'">
+            <h3 class="text-sm font-semibold mb-3" [class.text-cyber-accent]="themeService.theme() === 'cyber-glow'"
+                [class.text-electric-accent]="themeService.theme() === 'electric-sky'">Linked Notes</h3>
+            <ul class="space-y-2">
                 @for (link of detectedBacklinks(); track link) {
-                <li class="info-item">
+                <li class="flex items-center gap-2 text-sm cursor-pointer p-2 rounded transition-colors"
+                    [class.text-cyber-text/70]="themeService.theme() === 'cyber-glow'"
+                    [class.text-electric-text/70]="themeService.theme() === 'electric-sky'"
+                    [class.hover:bg-cyber-accent/10]="themeService.theme() === 'cyber-glow'"
+                    [class.hover:bg-electric-accent/10]="themeService.theme() === 'electric-sky'">
                     <app-icon name="link" size="xs" customClass="w-3 h-3"></app-icon>
                     {{ link }}
                 </li>
                 }
             </ul>
         </div>
-        }
-
-        @if (detectedTasks().length > 0) {
-        <div class="info-section">
-            <h3 class="info-title">Tasks in Note</h3>
-            <ul class="info-list">
-                @for (task of detectedTasks(); track task.line) {
-                <li class="info-item" [class.completed]="task.completed">
-                    @if (task.completed) {
-                    <app-icon name="task-completed" size="xs" customClass="w-3 h-3 text-green-500"></app-icon>
-                    } @else {
-                    <app-icon name="task" size="xs" customClass="w-3 h-3"></app-icon>
-                    }
-                    {{ task.text }}
-                </li>
-                }
-            </ul>
-        </div>
-        }
     </div>
     }
 </div>
