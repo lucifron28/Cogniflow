@@ -32,6 +32,8 @@
     "@datorama/akita": "^8.0.1",
     "@tailwindcss/postcss": "^4.1.14",
     "firebase": "^12.4.0",
+    "marked": "^16.4.0",
+    "ngx-markdown": "^20.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.8.1",
     "zone.js": "~0.15.0"
