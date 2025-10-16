@@ -4,14 +4,40 @@ import { NoteEditorComponent } from './features/notes/note-editor/note-editor.co
 import { AnalyticsComponent } from './features/analytics/analytics.component';
 import { SearchComponent } from './features/search/search.component';
 import { AuthComponent } from './features/auth/auth.component';
+import { authGuard } from './core/guards/auth.guard';
+import { publicGuard } from './core/guards/public.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/auth', pathMatch: 'full' },
-  { path: 'auth', component: AuthComponent },
-  { path: 'notes', component: NotesComponent },
-  { path: 'notes/new', component: NoteEditorComponent },
-  { path: 'notes/:id', component: NoteEditorComponent },
-  { path: 'analytics', component: AnalyticsComponent },
-  { path: 'search', component: SearchComponent },
-  { path: '**', redirectTo: '/auth' }
+  { path: '', redirectTo: '/notes', pathMatch: 'full' },
+  { 
+    path: 'auth', 
+    component: AuthComponent,
+    canActivate: [publicGuard]
+  },
+  { 
+    path: 'notes', 
+    component: NotesComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'notes/new', 
+    component: NoteEditorComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'notes/:id', 
+    component: NoteEditorComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'analytics', 
+    component: AnalyticsComponent,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'search', 
+    component: SearchComponent,
+    canActivate: [authGuard]
+  },
+  { path: '**', redirectTo: '/notes' }
 ];
