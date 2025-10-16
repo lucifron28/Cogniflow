@@ -204,100 +204,105 @@
   color: var(--color-cyber-accent);
 }
 
-/* Markdown Preview Styling - Standard sizes, proper hierarchy */
-.markdown-preview :deep(h1) {
+/* Markdown Preview Styling - Standard sizes with proper hierarchy */
+.markdown-preview h1 {
   font-size: 2.5em;
   font-weight: 700;
   margin: 0.67em 0;
+  padding: 0 1.5rem 0.3em;
   color: var(--color-cyber-accent);
   line-height: 1.2;
   border-bottom: 2px solid rgba(0, 242, 254, 0.2);
-  padding-bottom: 0.3em;
 }
 
-.markdown-preview :deep(h2) {
+.markdown-preview h2 {
   font-size: 2em;
   font-weight: 700;
   margin: 0.75em 0 0.5em;
+  padding: 0 1.5rem 0.3em;
   color: var(--color-cyber-accent);
   line-height: 1.3;
   border-bottom: 1px solid rgba(0, 242, 254, 0.15);
-  padding-bottom: 0.3em;
 }
 
-.markdown-preview :deep(h3) {
+.markdown-preview h3 {
   font-size: 1.5em;
   font-weight: 600;
   margin: 0.83em 0 0.5em;
+  padding: 0 1.5rem;
   color: var(--color-cyber-accent);
   line-height: 1.4;
 }
 
-.markdown-preview :deep(h4) {
+.markdown-preview h4 {
   font-size: 1.25em;
   font-weight: 600;
   margin: 1em 0 0.5em;
+  padding: 0 1.5rem;
   color: var(--color-cyber-accent);
 }
 
-.markdown-preview :deep(h5) {
+.markdown-preview h5 {
   font-size: 1.1em;
   font-weight: 600;
   margin: 1.5em 0 0.5em;
+  padding: 0 1.5rem;
   color: var(--color-cyber-accent);
 }
 
-.markdown-preview :deep(h6) {
+.markdown-preview h6 {
   font-size: 1em;
   font-weight: 600;
   margin: 1.5em 0 0.5em;
+  padding: 0 1.5rem;
   color: var(--color-cyber-accent);
   opacity: 0.8;
 }
 
-.markdown-preview :deep(p) {
+.markdown-preview p {
   margin: 1em 0;
+  padding: 0 1.5rem;
   line-height: 1.7;
 }
 
 /* Regular unordered lists - show bullets */
-.markdown-preview :deep(ul) {
+.markdown-preview ul {
   margin: 1em 0;
-  padding-left: 2em;
+  padding-left: 3.5rem;
   list-style-type: disc;
 }
 
 /* Nested lists */
-.markdown-preview :deep(ul ul) {
+.markdown-preview ul ul {
   list-style-type: circle;
   margin: 0.5em 0;
 }
 
-.markdown-preview :deep(ul ul ul) {
+.markdown-preview ul ul ul {
   list-style-type: square;
 }
 
 /* Ordered lists - show numbers */
-.markdown-preview :deep(ol) {
+.markdown-preview ol {
   margin: 1em 0;
-  padding-left: 2em;
+  padding-left: 3.5rem;
   list-style-type: decimal;
 }
 
-.markdown-preview :deep(li) {
+.markdown-preview li {
   margin: 0.25em 0;
   line-height: 1.7;
   padding-left: 0.5em;
 }
 
 /* Task list items (checkboxes) - remove bullets */
-.markdown-preview :deep(li:has(input[type="checkbox"])) {
+.markdown-preview li:has(input[type="checkbox"]) {
   list-style: none;
   margin-left: -2em;
   padding-left: 0;
 }
 
-.markdown-preview :deep(li input[type="checkbox"]) {
+.markdown-preview li input[type="checkbox"] {
   margin-right: 0.75em;
   width: 1.1em;
   height: 1.1em;
@@ -307,7 +312,7 @@
 }
 
 /* Inline code */
-.markdown-preview :deep(code) {
+.markdown-preview code {
   background-color: rgba(0, 242, 254, 0.15);
   color: #22d3ee;
   padding: 0.2em 0.4em;
@@ -318,17 +323,17 @@
 }
 
 /* Code blocks */
-.markdown-preview :deep(pre) {
+.markdown-preview pre {
   background-color: rgba(0, 20, 30, 0.8);
   padding: 1.25rem;
   border-radius: 0.5rem;
   border: 1px solid rgba(0, 242, 254, 0.3);
   overflow-x: auto;
-  margin: 1.5em 0;
+  margin: 1.5em 1.5rem;
   line-height: 1.5;
 }
 
-.markdown-preview :deep(pre code) {
+.markdown-preview pre code {
   background: none;
   color: #e2e8f0;
   padding: 0;
@@ -337,70 +342,71 @@
 }
 
 /* Blockquotes */
-.markdown-preview :deep(blockquote) {
+.markdown-preview blockquote {
   border-left: 4px solid var(--color-cyber-accent);
   padding: 0.5em 0 0.5em 1.5em;
-  margin: 1.5em 0;
+  margin: 1.5em 1.5rem;
   background-color: rgba(0, 242, 254, 0.05);
   font-style: italic;
   color: rgba(0, 242, 254, 0.9);
 }
 
-.markdown-preview :deep(blockquote p) {
+.markdown-preview blockquote p {
   margin: 0.5em 0;
+  padding: 0;
 }
 
 /* Regular links - clear indicator */
-.markdown-preview :deep(a) {
+.markdown-preview a {
   color: #22d3ee;
   text-decoration: underline;
-  text-decoration-color: rgba(34, 211, 238, 0.4);
+  text-decoration-color: rgba(34, 211, 238, 0.6);
   text-decoration-thickness: 2px;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
   cursor: pointer;
   transition: all 0.2s;
   font-weight: 500;
 }
 
-.markdown-preview :deep(a:hover) {
+.markdown-preview a:hover {
   color: #06b6d4;
-  text-decoration-color: rgba(6, 182, 212, 0.8);
+  text-decoration-color: rgba(6, 182, 212, 1);
   text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
 }
 
-.markdown-preview :deep(hr) {
+.markdown-preview hr {
   border: none;
   border-top: 2px solid rgba(0, 242, 254, 0.3);
-  margin: 2em 0;
+  margin: 2em 1.5rem;
 }
 
 /* Backlink styling - distinct from regular links */
-.markdown-preview :deep(a[href^="#note:"]) {
+.markdown-preview a[href^="#note:"] {
   color: #06b6d4;
   text-decoration: none;
   font-weight: 600;
   padding: 0.2em 0.5em;
-  background-color: rgba(6, 182, 212, 0.2);
-  border: 1px solid rgba(6, 182, 212, 0.4);
+  background-color: rgba(6, 182, 212, 0.25);
+  border: 1px solid rgba(6, 182, 212, 0.5);
   border-radius: 0.3rem;
   transition: all 0.2s;
 }
 
-.markdown-preview :deep(a[href^="#note:"]:hover) {
-  background-color: rgba(6, 182, 212, 0.3);
-  border-color: rgba(6, 182, 212, 0.6);
-  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+.markdown-preview a[href^="#note:"]:hover {
+  background-color: rgba(6, 182, 212, 0.4);
+  border-color: rgba(6, 182, 212, 0.7);
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
   transform: translateY(-1px);
 }
 
 /* Strong/Bold text */
-.markdown-preview :deep(strong) {
+.markdown-preview strong {
   font-weight: 700;
   color: var(--color-cyber-accent);
 }
 
 /* Emphasis/Italic text */
-.markdown-preview :deep(em) {
+.markdown-preview em {
   font-style: italic;
   color: rgba(0, 242, 254, 0.95);
 }
@@ -474,15 +480,16 @@
 }
 
 /* Syntax Highlighting (Prism) - Let Prism handle most colors */
-.markdown-preview :deep(pre[class*="language-"]) {
+.markdown-preview pre[class*="language-"] {
   background: #2d2d2d !important;
   border: 1px solid rgba(0, 242, 254, 0.3) !important;
   padding: 1.25rem !important;
   border-radius: 0.5rem !important;
   overflow-x: auto !important;
+  margin: 1.5em 1.5rem !important;
 }
 
-.markdown-preview :deep(code[class*="language-"]) {
+.markdown-preview code[class*="language-"] {
   background: none !important;
   text-shadow: none !important;
   font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace !important;
@@ -567,100 +574,100 @@
   color: #1f2937;
 }
 
-/* Light theme overrides */
-:host-context(.electric-sky) .markdown-preview :deep(h1),
-:host-context(.electric-sky) .markdown-preview :deep(h2),
-:host-context(.electric-sky) .markdown-preview :deep(h3),
-:host-context(.electric-sky) .markdown-preview :deep(h4),
-:host-context(.electric-sky) .markdown-preview :deep(h5),
-:host-context(.electric-sky) .markdown-preview :deep(h6) {
+/* Light theme markdown overrides */
+.electric-sky .markdown-preview h1,
+.electric-sky .markdown-preview h2,
+.electric-sky .markdown-preview h3,
+.electric-sky .markdown-preview h4,
+.electric-sky .markdown-preview h5,
+.electric-sky .markdown-preview h6 {
   color: #1f2937;
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(h1) {
+.electric-sky .markdown-preview h1 {
   border-bottom-color: rgba(8, 145, 178, 0.3);
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(h2) {
+.electric-sky .markdown-preview h2 {
   border-bottom-color: rgba(8, 145, 178, 0.2);
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(p) {
+.electric-sky .markdown-preview p {
   color: #374151;
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(li) {
+.electric-sky .markdown-preview li {
   color: #374151;
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(code) {
+.electric-sky .markdown-preview code {
   background-color: rgba(8, 145, 178, 0.1);
   color: #0891b2;
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(pre) {
+.electric-sky .markdown-preview pre {
   background-color: #f1f5f9;
   border-color: rgba(8, 145, 178, 0.3);
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(pre code) {
+.electric-sky .markdown-preview pre code {
   color: #1e293b;
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(blockquote) {
+.electric-sky .markdown-preview blockquote {
   border-left-color: #0891b2;
   background-color: rgba(8, 145, 178, 0.05);
   color: #475569;
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(a) {
+.electric-sky .markdown-preview a {
   color: #0284c7;
-  text-decoration-color: rgba(2, 132, 199, 0.4);
+  text-decoration-color: rgba(2, 132, 199, 0.6);
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(a:hover) {
+.electric-sky .markdown-preview a:hover {
   color: #0369a1;
-  text-decoration-color: rgba(3, 105, 161, 0.8);
+  text-decoration-color: rgba(3, 105, 161, 1);
   text-shadow: none;
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(strong) {
+.electric-sky .markdown-preview strong {
   color: #1f2937;
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(em) {
+.electric-sky .markdown-preview em {
   color: #475569;
 }
 
-:host-context(.electric-sky) .info-panel {
+.electric-sky .info-panel {
   background: var(--color-electric-white);
   border-left-color: var(--color-electric-light-gray);
 }
 
 /* Light theme backlinks - distinct coloring */
-:host-context(.electric-sky) .markdown-preview :deep(a[href^="#note:"]) {
+.electric-sky .markdown-preview a[href^="#note:"] {
   color: #0891b2;
   background-color: rgba(8, 145, 178, 0.15);
   border-color: rgba(8, 145, 178, 0.4);
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(a[href^="#note:"]:hover) {
+.electric-sky .markdown-preview a[href^="#note:"]:hover {
   background-color: rgba(8, 145, 178, 0.25);
   border-color: rgba(8, 145, 178, 0.6);
   box-shadow: 0 0 10px rgba(8, 145, 178, 0.4);
 }
 
 /* Light theme task checkboxes */
-:host-context(.electric-sky) .markdown-preview :deep(li input[type="checkbox"]) {
+.electric-sky .markdown-preview li input[type="checkbox"] {
   accent-color: #0891b2;
 }
 
 /* Light theme syntax highlighting */
-:host-context(.electric-sky) .markdown-preview :deep(pre[class*="language-"]) {
-  background: #f5f5f5 !important;
+.electric-sky .markdown-preview pre[class*="language-"] {
+  background: #f1f5f9 !important;
   border: 1px solid rgba(8, 145, 178, 0.3) !important;
 }
 
-:host-context(.electric-sky) .markdown-preview :deep(code[class*="language-"]) {
+.electric-sky .markdown-preview code[class*="language-"] {
   color: #393a34 !important;
 }
