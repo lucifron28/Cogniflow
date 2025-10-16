@@ -1,1 +1,120 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+/* Theme Base Styles & Tailwind v4 Custom Colors */
+:root {
+  /* Cyber Glow (Dark Mode) Colors */
+  --color-cyber-black: #000000;
+  --color-cyber-dark-blue: #000957;
+  --color-cyber-neon-blue: #183DE4;
+  --color-cyber-accent: #00f2fe;
+  --color-cyber-gray: #1a2525;
+  
+  /* Electric Sky (Light Mode) Colors */
+  --color-electric-white: #fdfbfb;
+  --color-electric-light-gray: #e5e7eb;
+  --color-electric-soft-blue: #c2e9fb;
+  --color-electric-cyan: #00d4ff;
+  --color-electric-neon: #00f2fe;
+  
+  /* Smooth transitions */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Cyber Glow (Dark Mode) */
+.cyber-glow {
+  background-image: linear-gradient(90deg, #000000 0%, #000957 60%, #183DE4 100%);
+  color: #00f2fe;
+}
+
+.cyber-gradient {
+  background-image: linear-gradient(90deg, #000000 0%, #000957 60%, #183DE4 100%);
+}
+
+.cyber-radial {
+  background-image: radial-gradient(at 70% 30%, #183DE4 0%, #000000 70%);
+}
+
+.cyber-button {
+  background-color: #000957;
+  border: 1px solid #00f2fe;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+  color: #00f2fe;
+  transition: box-shadow 0.3s ease;
+}
+
+.cyber-button:hover {
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.8);
+}
+
+/* Electric Sky (Light Mode) */
+.electric-sky {
+  background-color: #fdfbfb;
+  background-image: linear-gradient(135deg, #fdfbfb 0%, #c2e9fb 100%);
+  color: #1f2937;
+}
+
+.electric-gradient {
+  background-color: #fdfbfb;
+  background-image: linear-gradient(135deg, #fdfbfb 0%, #c2e9fb 100%);
+}
+
+.electric-card {
+  background-color: #ffffff;
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+.electric-card:hover {
+  box-shadow: 0 0 35px rgba(0, 242, 254, 0.6);
+}
+
+/* Text Glow Effects */
+.text-glow {
+  color: #00f2fe;
+  text-shadow: 0 0 10px #00f2fe, 0 0 20px #00f2fe;
+}
+
+/* Theme-aware styles */
+.cyber-glow .card {
+  background-color: var(--color-cyber-gray);
+  border: 1px solid var(--color-cyber-accent);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.electric-sky .card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-electric-soft-blue);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.cyber-glow .btn-primary {
+  background-color: var(--color-cyber-dark-blue);
+  border: 1px solid var(--color-cyber-accent);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+  color: var(--color-cyber-accent);
+  transition: box-shadow 0.3s ease;
+}
+
+.cyber-glow .btn-primary:hover {
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.8);
+}
+
+.electric-sky .btn-primary {
+  background-color: var(--color-electric-cyan);
+  color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+
+.electric-sky .btn-primary:hover {
+  background-color: var(--color-electric-neon);
+}
+
+.cyber-glow .nav {
+  background-color: var(--color-cyber-gray);
+  border-bottom: 1px solid var(--color-cyber-accent);
+}
+
+.electric-sky .nav {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--color-electric-light-gray);
+}
