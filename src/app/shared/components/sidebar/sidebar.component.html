@@ -6,7 +6,8 @@
         @if (!isCollapsed()) {
         <h2 class="text-xl font-bold text-glow">Cogniflow</h2>
         }
-        <button (click)="toggleSidebar()" class="hover-bg p-2 rounded hover:bg-opacity-10 transition-all">
+        <button (click)="toggleSidebar()"
+            class="hover-bg p-2 rounded hover:bg-opacity-10 transition-all cursor-pointer">
             @if (isCollapsed()) {
             <app-icon name="expand" size="lg"></app-icon>
             } @else {
@@ -127,8 +128,87 @@
     </div>
 
     <!-- Sidebar Footer -->
-    <div class="sidebar-footer p-4">
+    <div class="sidebar-footer p-4 flex items-center justify-between gap-2 relative">
         <app-theme-toggle />
+
+        <!-- Settings Dropdown -->
+        <div class="relative">
+            <button (click)="toggleSettingsMenu()" class="p-2 rounded-lg transition-all duration-200 cursor-pointer"
+                [ngClass]="{
+                    'bg-cyber-accent/20 hover:bg-cyber-accent/30 hover:shadow-[0_0_20px_rgba(0,242,254,0.6)]': showSettings() && themeService.theme() === 'cyber-glow',
+                    'hover:bg-cyber-accent/10 hover:shadow-[0_0_20px_rgba(0,242,254,0.6)]': !showSettings() && themeService.theme() === 'cyber-glow',
+                    'bg-electric-neon/20 hover:bg-electric-neon/30 hover:shadow-[0_0_20px_rgba(59,130,246,0.6)]': showSettings() && themeService.theme() === 'electric-sky',
+                    'hover:bg-electric-neon/10 hover:shadow-[0_0_20px_rgba(59,130,246,0.6)]': !showSettings() && themeService.theme() === 'electric-sky'
+                }" [attr.aria-label]="'Settings'" [attr.aria-expanded]="showSettings()" title="Settings">
+                <app-icon name="settings" size="lg"></app-icon>
+            </button>
+
+            <!-- Dropdown Menu -->
+            @if (showSettings()) {
+            <div class="absolute bottom-full right-0 mb-2 w-56 rounded-lg shadow-2xl overflow-hidden backdrop-blur-xl border z-50 transition-colors"
+                [class.bg-cyber-darker/95]="themeService.theme() === 'cyber-glow'"
+                [class.border-cyber-accent/30]="themeService.theme() === 'cyber-glow'"
+                [class.bg-electric-light/95]="themeService.theme() === 'electric-sky'"
+                [class.border-electric-neon/30]="themeService.theme() === 'electric-sky'"
+                (click)="$event.stopPropagation()">
+
+                <div class="px-4 py-3 border-b border-opacity-20"
+                    [class.border-cyber-accent]="themeService.theme() === 'cyber-glow'"
+                    [class.border-electric-neon]="themeService.theme() === 'electric-sky'">
+                    <p class="text-sm font-semibold opacity-90">Settings</p>
+                </div>
+
+                <!-- Menu Items -->
+                <div class="py-2">
+                    <!-- Profile -->
+                    <button
+                        class="w-full px-4 py-2.5 text-left flex items-center gap-3 transition-all duration-200 cursor-pointer"
+                        [ngClass]="{
+                            'hover:bg-white/10': themeService.theme() === 'cyber-glow',
+                            'hover:bg-black/10': themeService.theme() === 'electric-sky'
+                        }">
+                        <app-icon name="user" size="md"></app-icon>
+                        <span class="text-sm">Profile</span>
+                    </button>
+
+                    <!-- Preferences -->
+                    <button
+                        class="w-full px-4 py-2.5 text-left flex items-center gap-3 transition-all duration-200 cursor-pointer"
+                        [ngClass]="{
+                            'hover:bg-white/10': themeService.theme() === 'cyber-glow',
+                            'hover:bg-black/10': themeService.theme() === 'electric-sky'
+                        }">
+                        <app-icon name="settings" size="md"></app-icon>
+                        <span class="text-sm">Preferences</span>
+                    </button>
+
+                    <!-- Account Settings -->
+                    <button
+                        class="w-full px-4 py-2.5 text-left flex items-center gap-3 transition-all duration-200 cursor-pointer"
+                        [ngClass]="{
+                            'hover:bg-white/10': themeService.theme() === 'cyber-glow',
+                            'hover:bg-black/10': themeService.theme() === 'electric-sky'
+                        }">
+                        <app-icon name="user" size="md"></app-icon>
+                        <span class="text-sm">Account Settings</span>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="my-2 border-t border-opacity-20"
+                        [class.border-cyber-accent]="themeService.theme() === 'cyber-glow'"
+                        [class.border-electric-neon]="themeService.theme() === 'electric-sky'">
+                    </div>
+
+                    <!-- Logout with Red Background -->
+                    <button (click)="logout()"
+                        class="w-full px-4 py-2.5 text-left flex items-center gap-3 transition-all duration-200 bg-red-500/20 hover:bg-red-600/40 text-red-400 hover:text-red-300 font-medium cursor-pointer">
+                        <app-icon name="logout" size="md"></app-icon>
+                        <span class="text-sm font-semibold">Logout</span>
+                    </button>
+                </div>
+            </div>
+            }
+        </div>
     </div>
     } @else {
     <!-- Collapsed Icon Menu -->
