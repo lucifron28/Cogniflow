@@ -8,17 +8,85 @@
         </button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Placeholder card -->
-        <div class="card p-6 rounded-lg">
-            <div class="text-center py-8">
-                <div class="flex justify-center mb-4">
-                    <app-icon name="document" size="xl" customClass="opacity-40"
-                        [attr.style]="'width: 4rem; height: 4rem;'"></app-icon>
-                </div>
-                <p class="text-lg opacity-70">No notes yet</p>
-                <p class="text-sm mt-2 opacity-50">Create your first note to get started!</p>
-            </div>
+    <!-- Loading State -->
+    @if (isLoading()) {
+    <div class="flex justify-center items-center py-12">
+        <app-icon name="spinner" size="xl"></app-icon>
+        <span class="ml-3 text-lg opacity-60">Loading notes...</span>
+    </div>
+    }
+
+    <!-- Error State -->
+    @else if (errorMessage()) {
+    <div class="card p-6 rounded-lg bg-red-500/10 border border-red-500/30">
+        <div class="flex items-center gap-3">
+            <app-icon name="alert" size="lg" customClass="text-red-500"></app-icon>
+            <p class="text-red-500">{{ errorMessage() }}</p>
         </div>
     </div>
+    }
+
+    <!-- Empty State -->
+    @else if (notes().length === 0) {
+    <div class="card p-12 rounded-lg text-center">
+        <div class="flex justify-center mb-4">
+            <app-icon name="document" size="xl" customClass="opacity-40"
+                [attr.style]="'width: 4rem; height: 4rem;'"></app-icon>
+        </div>
+        <p class="text-lg opacity-70">No notes yet</p>
+        <p class="text-sm mt-2 opacity-50">Create your first note to get started!</p>
+    </div>
+    }
+
+    <!-- Notes Grid -->
+    @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (note of notes(); track note.id) {
+        <a [routerLink]="['/notes', note.id]"
+            class="card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all cursor-pointer group">
+            <div class="flex items-start justify-between mb-3">
+                <h3 class="text-lg font-semibold group-hover:text-glow transition-colors flex-1 truncate">
+                    {{ note.title || 'Untitled' }}
+                </h3>
+                <div class="flex gap-2 ml-2">
+                    @if (note.isPinned) {
+                    <app-icon name="pin" size="sm" customClass="opacity-60"></app-icon>
+                    }
+                    @if (note.isFavorite) {
+                    <app-icon name="star" size="sm" customClass="opacity-60"></app-icon>
+                    }
+                </div>
+            </div>
+
+            @if (note.tags.length > 0) {
+            <div class="flex flex-wrap gap-2 mb-3">
+                @for (tag of note.tags.slice(0, 3); track tag) {
+                <span class="px-2 py-1 rounded text-xs opacity-60" style="background-color: rgba(0, 242, 254, 0.1);">
+                    #{{ tag }}
+                </span>
+                }
+                @if (note.tags.length > 3) {
+                <span class="px-2 py-1 rounded text-xs opacity-40">
+                    +{{ note.tags.length - 3 }}
+                </span>
+                }
+            </div>
+            }
+
+            <div class="flex items-center justify-between text-sm opacity-50">
+                <div class="flex items-center gap-4">
+                    <span>{{ note.wordCount }} words</span>
+                    @if (note.linkedNotesCount > 0) {
+                    <span class="flex items-center gap-1">
+                        <app-icon name="link" size="xs"></app-icon>
+                        {{ note.linkedNotesCount }}
+                    </span>
+                    }
+                </div>
+                <span>{{ formatDate(note.updatedAt) }}</span>
+            </div>
+        </a>
+        }
+    </div>
+    }
 </div>
