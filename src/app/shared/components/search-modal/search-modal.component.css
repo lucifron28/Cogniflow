@@ -1,0 +1,107 @@
+.search-modal {
+  background: var(--color-cyber-gray);
+  border: 1px solid var(--color-cyber-accent);
+}
+
+.search-header {
+  border-color: rgba(0, 242, 254, 0.2);
+}
+
+.search-header input {
+  color: var(--color-cyber-white);
+}
+
+.search-header input::placeholder {
+  color: var(--color-cyber-white);
+  opacity: 0.4;
+}
+
+.kbd {
+  background: rgba(0, 242, 254, 0.1);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--color-cyber-accent);
+}
+
+.kbd-sm {
+  background: rgba(0, 242, 254, 0.1);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-family: monospace;
+  color: var(--color-cyber-accent);
+}
+
+.search-results {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-cyber-accent) transparent;
+}
+
+.search-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background-color: var(--color-cyber-accent);
+  border-radius: 3px;
+}
+
+.result-item {
+  border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+}
+
+.result-item:hover,
+.result-item.selected {
+  background: rgba(0, 242, 254, 0.1);
+}
+
+.result-type {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.search-footer {
+  border-color: rgba(0, 242, 254, 0.2);
+}
+
+.empty-state {
+  color: var(--color-cyber-white);
+}
+
+/* Light theme overrides */
+:root.electric-sky .search-modal {
+  background: var(--color-electric-white);
+  border-color: var(--color-electric-accent);
+}
+
+:root.electric-sky .search-header {
+  border-color: rgba(0, 150, 255, 0.2);
+}
+
+:root.electric-sky .search-header input {
+  color: var(--color-electric-black);
+}
+
+:root.electric-sky .kbd,
+:root.electric-sky .kbd-sm {
+  background: rgba(0, 150, 255, 0.1);
+  border-color: rgba(0, 150, 255, 0.3);
+  color: var(--color-electric-accent);
+}
+
+:root.electric-sky .result-item:hover,
+:root.electric-sky .result-item.selected {
+  background: rgba(0, 150, 255, 0.1);
+}
+
+:root.electric-sky .search-footer {
+  border-color: rgba(0, 150, 255, 0.2);
+}
