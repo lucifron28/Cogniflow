@@ -13,6 +13,8 @@ import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-bash';
+import { NotesService } from '../../../services/notes.service';
+import { Note } from '../../../core/models/note.model';
 
 type EditorView = 'split' | 'editor' | 'preview';
 
@@ -28,6 +30,7 @@ export class NoteEditorComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private elementRef = inject(ElementRef);
+  private notesService = inject(NotesService);
 
   noteId = signal<string | null>(null);
   title = signal('');
@@ -35,7 +38,9 @@ export class NoteEditorComponent implements OnInit {
   tags = signal<string[]>([]);
   editorView = signal<EditorView>('split');
   isSaving = signal(false);
+  isLoading = signal(false);
   lastSaved = signal<Date | null>(null);
+  errorMessage = signal<string | null>(null);
 
   isNewNote = computed(() => !this.noteId());
   wordCount = computed(() => {
@@ -115,9 +120,15 @@ export class NoteEditorComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      if (params['id']) {
+      if (params['id'] && params['id'] !== 'new') {
         this.noteId.set(params['id']);
         this.loadNote(params['id']);
+      } else {
+        // New note
+        this.noteId.set(null);
+        this.title.set('');
+        this.content.set('');
+        this.tags.set([]);
       }
     });
   }
@@ -137,42 +148,29 @@ export class NoteEditorComponent implements OnInit {
     }
   }
 
-  loadNote(id: string) {
-    // TODO: Load note from service/Firebase
-    this.title.set('Example Note');
-    this.content.set(`# Welcome to Cogniflow
+  async loadNote(id: string) {
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
 
-This is a **markdown** editor with live preview!
-
-## Features
-
-- Split view (editor | preview)
-- Backlinks: [[Another Note]] and [[Meeting Notes]]
-- Task support:
-  - [ ] Uncompleted task
-  - [x] Completed task
-  - [ ] Another task to complete
-  
-\`\`\`typescript
-const code = 'syntax highlighting';
-console.log('Hello from Cogniflow!');
-\`\`\`
-
-> Block quotes look great too!
-
-### More Markdown Features
-
-**Bold text** and *italic text* work perfectly.
-
-1. Numbered lists
-2. Are supported
-3. Out of the box
-
----
-
-Links work too: [GitHub](https://github.com)
-`);
-    this.tags.set(['example', 'markdown']);
+    try {
+      const note = await this.notesService.getNoteOnce(id);
+      
+      if (note) {
+        this.title.set(note.title);
+        this.content.set(note.content);
+        this.tags.set(note.tags);
+        this.lastSaved.set(note.updatedAt);
+      } else {
+        this.errorMessage.set('Note not found');
+        // Redirect back to notes list after 2 seconds
+        setTimeout(() => this.router.navigate(['/notes']), 2000);
+      }
+    } catch (error) {
+      console.error('Error loading note:', error);
+      this.errorMessage.set('Failed to load note');
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   setView(view: EditorView) {
@@ -181,29 +179,34 @@ Links work too: [GitHub](https://github.com)
 
   async saveNote() {
     this.isSaving.set(true);
+    this.errorMessage.set(null);
     
     try {
-      // TODO: Implement Firebase save
-      const note = {
-        id: this.noteId() || this.generateId(),
-        title: this.title(),
+      const noteData = {
+        title: this.title() || 'Untitled',
         content: this.content(),
         tags: this.tags(),
-        linkedNotes: this.detectedBacklinks(),
-        updatedAt: new Date()
+        linkedNotes: this.detectedBacklinks()
       };
-      
-      console.log('Saving note:', note);
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      this.lastSaved.set(new Date());
-      
+
       if (this.isNewNote()) {
-        this.router.navigate(['/notes', note.id]);
+        // Create new note
+        const newNoteId = await this.notesService.createNote(noteData);
+        this.noteId.set(newNoteId);
+        this.lastSaved.set(new Date());
+        
+        // Navigate to the new note's URL
+        this.router.navigate(['/notes', newNoteId]);
+      } else {
+        // Update existing note
+        await this.notesService.updateNote(this.noteId()!, noteData);
+        this.lastSaved.set(new Date());
       }
+
+      console.log('Note saved successfully');
     } catch (error) {
       console.error('Error saving note:', error);
+      this.errorMessage.set('Failed to save note. Please try again.');
     } finally {
       this.isSaving.set(false);
     }
@@ -213,8 +216,21 @@ Links work too: [GitHub](https://github.com)
     this.router.navigate(['/notes']);
   }
 
-  private generateId(): string {
-    return `note-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  async deleteNote() {
+    if (!this.noteId()) return;
+
+    const confirmed = confirm('Are you sure you want to delete this note? This action cannot be undone.');
+    if (!confirmed) return;
+
+    this.isSaving.set(true);
+    try {
+      await this.notesService.deleteNote(this.noteId()!);
+      this.router.navigate(['/notes']);
+    } catch (error) {
+      console.error('Error deleting note:', error);
+      this.errorMessage.set('Failed to delete note');
+      this.isSaving.set(false);
+    }
   }
 
   // Keyboard shortcuts
