@@ -32,6 +32,30 @@
   box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
 }
 
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 0.5rem;
+  color: #ef4444;
+  font-size: 0.875rem;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .view-toggle-group {
   display: flex;
   gap: 0.25rem;
@@ -94,6 +118,30 @@
 .save-status {
   font-size: 0.75rem;
   opacity: 0.5;
+}
+
+.btn-delete {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 0.5rem;
+  color: #ef4444;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.2);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+.btn-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .btn-save {
@@ -670,4 +718,25 @@
 
 .electric-sky .markdown-preview code[class*="language-"] {
   color: #393a34 !important;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+  color: var(--color-cyber-accent);
+}
+
+.loading-text {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+/* Light theme loading */
+:host-context(.electric-sky) .loading-container {
+  color: #0891b2;
 }
