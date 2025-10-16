@@ -1,0 +1,24 @@
+<div class="container mx-auto p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">My Notes</h1>
+        <button routerLink="/notes/new"
+            class="btn-primary px-6 py-2 rounded-lg transition-all shadow-sm hover:scale-105">
+            <span class="text-lg mr-2">+</span>
+            New Note
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Placeholder card -->
+        <div class="card p-6 rounded-lg">
+            <div class="text-center py-8">
+                <svg class="w-16 h-16 mx-auto mb-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p class="text-lg opacity-70">No notes yet</p>
+                <p class="text-sm mt-2 opacity-50">Create your first note to get started!</p>
+            </div>
+        </div>
+    </div>
+</div>
