@@ -16,6 +16,7 @@ import 'prismjs/components/prism-bash';
 import { NotesService } from '../../../services/notes.service';
 import { Note } from '../../../core/models/note.model';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
+import { ThemeService } from '../../../core/services/theme.service';
 
 type EditorView = 'split' | 'editor' | 'preview';
 
@@ -29,6 +30,7 @@ type EditorView = 'split' | 'editor' | 'preview';
 })
 export class NoteEditorComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  themeService = inject(ThemeService);
   private router = inject(Router);
   private elementRef = inject(ElementRef);
   private notesService = inject(NotesService);
@@ -63,16 +65,33 @@ export class NoteEditorComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
   
   constructor() {
+    const renderer = new marked.Renderer();
+    
+    renderer.listitem = (item: any) => {
+      const { text, task, checked } = item;
+      if (task) {
+        const checkboxHtml = checked 
+          ? '<input type="checkbox" checked />' 
+          : '<input type="checkbox" />';
+        return `<li class="task-list-item">${checkboxHtml} ${text}</li>`;
+      }
+      return `<li>${text}</li>`;
+    };
+
     marked.use({
       gfm: true,
-      breaks: false
+      breaks: false,
+      renderer: renderer
     });
 
     effect(() => {
       this.content();
       this.editorView();
       
-      setTimeout(() => this.highlightCode(), 0);
+      setTimeout(() => {
+        this.highlightCode();
+        this.attachCheckboxListeners();
+      }, 0);
     });
   }
   
@@ -153,7 +172,6 @@ export class NoteEditorComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    // Use Observable version to avoid injection context issues
     this.notesService.getNote(id).subscribe({
       next: (note) => {
         if (note) {
@@ -163,7 +181,6 @@ export class NoteEditorComponent implements OnInit {
           this.lastSaved.set(note.updatedAt);
         } else {
           this.errorMessage.set('Note not found');
-          // Redirect back to notes list after 2 seconds
           setTimeout(() => this.router.navigate(['/notes']), 2000);
         }
         this.isLoading.set(false);
@@ -198,10 +215,8 @@ export class NoteEditorComponent implements OnInit {
         this.noteId.set(newNoteId);
         this.lastSaved.set(new Date());
         
-        // Navigate to the new note's URL
         this.router.navigate(['/notes', newNoteId]);
       } else {
-        // Update existing note
         await this.notesService.updateNote(this.noteId()!, noteData);
         this.lastSaved.set(new Date());
       }
@@ -258,6 +273,26 @@ export class NoteEditorComponent implements OnInit {
     this.setView(views[nextIndex]);
   }
 
+  private attachCheckboxListeners() {
+    const checkboxes = this.elementRef.nativeElement.querySelectorAll('.markdown-preview input[type="checkbox"]');
+    
+    checkboxes.forEach((checkbox: HTMLInputElement, index: number) => {
+      checkbox.setAttribute('data-checkbox-index', index.toString());
+      
+      const newCheckbox = checkbox.cloneNode(true) as HTMLInputElement;
+      checkbox.replaceWith(newCheckbox);
+    });
+    
+    const freshCheckboxes = this.elementRef.nativeElement.querySelectorAll('.markdown-preview input[type="checkbox"]');
+    
+    freshCheckboxes.forEach((checkbox: HTMLInputElement) => {
+      checkbox.addEventListener('change', (event) => {
+        event.stopPropagation();
+        this.toggleCheckbox(checkbox);
+      });
+    });
+  }
+
   handlePreviewClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     
@@ -273,5 +308,47 @@ export class NoteEditorComponent implements OnInit {
         alert(`Would navigate to: ${noteName}\n\n(Navigation will be implemented when notes are stored in Firebase)`);
       }
     }
+  }
+
+  toggleCheckbox(checkbox: HTMLInputElement) {
+    // Get the checkbox index from the data attribute
+    const checkboxIndexStr = checkbox.getAttribute('data-checkbox-index');
+    if (!checkboxIndexStr) {
+      console.warn('Checkbox index not found');
+      return;
+    }
+    
+    const checkboxIndex = parseInt(checkboxIndexStr, 10);
+    const isChecked = checkbox.checked;
+    
+    // Find the corresponding line in the markdown
+    const lines = this.content().split('\n');
+    let checkboxCount = 0;
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const uncheckedMatch = line.match(/^(\s*)- \[ \] (.+)/);
+      const checkedMatch = line.match(/^(\s*)- \[x\] (.+)/i);
+      
+      if (uncheckedMatch || checkedMatch) {
+        if (checkboxCount === checkboxIndex) {
+          // Toggle this checkbox based on its current state
+          if (isChecked) {
+            // Was unchecked, now checked - update to [x]
+            lines[i] = line.replace(/- \[ \]/, '- [x]');
+          } else {
+            // Was checked, now unchecked - update to [ ]
+            lines[i] = line.replace(/- \[x\]/i, '- [ ]');
+          }
+          
+          console.log('Toggling checkbox', checkboxIndex, 'from', line, 'to', lines[i]);
+          break;
+        }
+        checkboxCount++;
+      }
+    }
+    
+    // Update the content
+    this.content.set(lines.join('\n'));
   }
 }
