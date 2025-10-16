@@ -149,29 +149,31 @@ export class NoteEditorComponent implements OnInit {
     }
   }
 
-  async loadNote(id: string) {
+  private loadNote(id: string) {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    try {
-      const note = await this.notesService.getNoteOnce(id);
-      
-      if (note) {
-        this.title.set(note.title);
-        this.content.set(note.content);
-        this.tags.set(note.tags);
-        this.lastSaved.set(note.updatedAt);
-      } else {
-        this.errorMessage.set('Note not found');
-        // Redirect back to notes list after 2 seconds
-        setTimeout(() => this.router.navigate(['/notes']), 2000);
+    // Use Observable version to avoid injection context issues
+    this.notesService.getNote(id).subscribe({
+      next: (note) => {
+        if (note) {
+          this.title.set(note.title);
+          this.content.set(note.content);
+          this.tags.set(note.tags);
+          this.lastSaved.set(note.updatedAt);
+        } else {
+          this.errorMessage.set('Note not found');
+          // Redirect back to notes list after 2 seconds
+          setTimeout(() => this.router.navigate(['/notes']), 2000);
+        }
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading note:', error);
+        this.errorMessage.set('Failed to load note');
+        this.isLoading.set(false);
       }
-    } catch (error) {
-      console.error('Error loading note:', error);
-      this.errorMessage.set('Failed to load note');
-    } finally {
-      this.isLoading.set(false);
-    }
+    });
   }
 
   setView(view: EditorView) {
