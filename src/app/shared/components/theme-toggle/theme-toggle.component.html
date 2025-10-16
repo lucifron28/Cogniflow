@@ -1,12 +1,11 @@
 <button (click)="themeService.toggleTheme()"
-    class="relative w-14 h-7 rounded-full transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-cyber-accent"
+    class="relative w-14 h-7 rounded-full transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-cyber-accent cursor-pointer"
     [class.bg-cyber-dark-blue]="themeService.theme() === 'cyber-glow'"
     [class.bg-electric-soft-blue]="themeService.theme() === 'electric-sky'"
     [class.border-cyber-accent/30]="themeService.theme() === 'cyber-glow'"
     [class.border-electric-neon/30]="themeService.theme() === 'electric-sky'"
     [attr.aria-label]="themeService.isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
 
-    <!-- Toggle Circle -->
     <span
         class="absolute top-0.5 left-0.5 w-6 h-6 rounded-full transition-all duration-300 flex items-center justify-center"
         [class.translate-x-7]="themeService.theme() === 'electric-sky'"
@@ -14,14 +13,16 @@
         [class.bg-electric-neon]="themeService.theme() === 'electric-sky'"
         [class.shadow-[0_0_15px_rgba(0,242,254,0.8)]]="themeService.theme() === 'cyber-glow'">
 
-        <!-- Moon Icon (Dark Mode) -->
         @if (themeService.theme() === 'cyber-glow') {
-        <app-icon name="moon" size="sm" customClass="text-cyber-black"></app-icon>
+        <div class="flex items-center justify-center w-full h-full">
+            <app-icon name="moon" size="sm" customClass="text-cyber-black"></app-icon>
+        </div>
         }
 
-        <!-- Sun Icon (Light Mode) -->
         @if (themeService.theme() === 'electric-sky') {
-        <app-icon name="sun" size="sm" customClass="text-electric-dark-blue"></app-icon>
+        <div class="flex items-center justify-center w-full h-full">
+            <app-icon name="sun" size="sm" customClass="text-electric-dark-blue"></app-icon>
+        </div>
         }
     </span>
 </button>
