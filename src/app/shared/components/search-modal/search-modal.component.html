@@ -1,0 +1,73 @@
+@if (isOpen()) {
+  <div 
+    class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-32"
+    (click)="onBackdropClick()"
+  >
+    <div 
+      class="search-modal w-full max-w-2xl rounded-lg shadow-2xl"
+      (click)="onModalClick($event)"
+    >
+      <!-- Search Input -->
+      <div class="search-header border-b">
+        <div class="flex items-center gap-3 px-4 py-3">
+          <span class="text-xl">🔍</span>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            placeholder="Search notes, tasks, tags..."
+            class="flex-1 bg-transparent outline-none text-base"
+            autofocus
+          />
+          <kbd class="kbd">ESC</kbd>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="search-results max-h-96 overflow-y-auto">
+        @if (results().length === 0 && searchQuery()) {
+          <div class="empty-state text-center py-12 px-4">
+            <div class="text-4xl mb-3">🔍</div>
+            <p class="text-sm opacity-60">No results found</p>
+          </div>
+        }
+
+        @if (results().length === 0 && !searchQuery()) {
+          <div class="empty-state text-center py-12 px-4">
+            <div class="text-4xl mb-3">⌨️</div>
+            <p class="text-sm opacity-60">Type to search...</p>
+            <p class="text-xs opacity-40 mt-2">Search across notes, tasks, and tags</p>
+          </div>
+        }
+
+        @for (result of results(); track result.id; let i = $index) {
+          <button
+            class="result-item w-full text-left px-4 py-3 hover:bg-opacity-50 transition-colors flex items-start gap-3"
+            [class.selected]="i === selectedIndex()"
+            (click)="selectResult(i)"
+          >
+            <span class="text-xl">{{ result.icon }}</span>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <h3 class="font-medium text-sm truncate">{{ result.title }}</h3>
+                <span class="result-type text-xs opacity-60">{{ result.type }}</span>
+              </div>
+              @if (result.preview) {
+                <p class="text-xs opacity-60 mt-1 truncate">{{ result.preview }}</p>
+              }
+            </div>
+          </button>
+        }
+      </div>
+
+      <!-- Footer with hints -->
+      <div class="search-footer border-t px-4 py-2 flex items-center justify-between text-xs opacity-60">
+        <div class="flex items-center gap-3">
+          <span><kbd class="kbd-sm">↑↓</kbd> Navigate</span>
+          <span><kbd class="kbd-sm">↵</kbd> Select</span>
+          <span><kbd class="kbd-sm">ESC</kbd> Close</span>
+        </div>
+        <span>{{ results().length }} results</span>
+      </div>
+    </div>
+  </div>
+}
