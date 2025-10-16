@@ -7,14 +7,11 @@
         <h2 class="text-xl font-bold text-glow">Cogniflow</h2>
         }
         <button (click)="toggleSidebar()" class="hover-bg p-2 rounded hover:bg-opacity-10 transition-all">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                @if (isCollapsed()) {
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                } @else {
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                }
-            </svg>
+            @if (isCollapsed()) {
+            <app-icon name="expand" size="lg"></app-icon>
+            } @else {
+            <app-icon name="collapse" size="lg"></app-icon>
+            }
         </button>
     </div>
 
@@ -23,10 +20,7 @@
     <div class="p-4">
         <button (click)="openSearchModal()"
             class="w-full btn-secondary px-4 py-3 rounded-lg text-left flex items-center gap-3 transition-all">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <app-icon name="search" size="lg"></app-icon>
             <span class="opacity-60">Search... ⌘K</span>
         </button>
     </div>
@@ -39,19 +33,15 @@
             <button (click)="toggleSection('files')"
                 class="w-full flex items-center justify-between mb-2 opacity-80 hover:opacity-100 transition-opacity">
                 <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        @if (showFiles()) {
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        } @else {
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        }
-                    </svg>
+                    @if (showFiles()) {
+                    <app-icon name="chevron-down" size="md"></app-icon>
+                    } @else {
+                    <app-icon name="chevron-right" size="md"></app-icon>
+                    }
                     <span class="text-sm font-semibold">Files</span>
                 </div>
                 <button class="hover-bg p-1 rounded hover:bg-opacity-10">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
+                    <app-icon name="plus" size="md"></app-icon>
                 </button>
             </button>
             @if (showFiles()) {
@@ -66,13 +56,11 @@
             <button (click)="toggleSection('recent')"
                 class="w-full flex items-center justify-between mb-2 opacity-80 hover:opacity-100 transition-opacity">
                 <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        @if (showRecent()) {
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        } @else {
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        }
-                    </svg>
+                    @if (showRecent()) {
+                    <app-icon name="chevron-down" size="md"></app-icon>
+                    } @else {
+                    <app-icon name="chevron-right" size="md"></app-icon>
+                    }
                     <span class="text-sm font-semibold">Recent</span>
                 </div>
             </button>
@@ -88,13 +76,11 @@
             <button (click)="toggleSection('tags')"
                 class="w-full flex items-center justify-between mb-2 opacity-80 hover:opacity-100 transition-opacity">
                 <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        @if (showTags()) {
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        } @else {
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        }
-                    </svg>
+                    @if (showTags()) {
+                    <app-icon name="chevron-down" size="md"></app-icon>
+                    } @else {
+                    <app-icon name="chevron-right" size="md"></app-icon>
+                    }
                     <span class="text-sm font-semibold">Tags</span>
                 </div>
             </button>
@@ -110,13 +96,11 @@
             <button (click)="toggleSection('tasks')"
                 class="w-full flex items-center justify-between mb-2 opacity-80 hover:opacity-100 transition-opacity">
                 <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        @if (showTasks()) {
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        } @else {
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        }
-                    </svg>
+                    @if (showTasks()) {
+                    <app-icon name="chevron-down" size="md"></app-icon>
+                    } @else {
+                    <app-icon name="chevron-right" size="md"></app-icon>
+                    }
                     <span class="text-sm font-semibold">Tasks</span>
                 </div>
             </button>
@@ -131,18 +115,12 @@
         <div class="nav-section-border pt-4">
             <a routerLink="/tasks" routerLinkActive="bg-opacity-20"
                 class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all mb-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
+                <app-icon name="task" size="lg"></app-icon>
                 <span class="text-sm">Tasks</span>
             </a>
             <a routerLink="/analytics" routerLinkActive="bg-opacity-20"
                 class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
+                <app-icon name="analytics" size="lg"></app-icon>
                 <span class="text-sm">Analytics</span>
             </a>
         </div>
@@ -156,10 +134,7 @@
     <!-- Collapsed Icon Menu -->
     <div class="flex-1 flex flex-col items-center gap-4 py-4">
         <button (click)="openSearchModal()" class="hover-bg p-3 rounded-lg hover:bg-opacity-10 transition-all">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <app-icon name="search" size="lg"></app-icon>
         </button>
     </div>
     }

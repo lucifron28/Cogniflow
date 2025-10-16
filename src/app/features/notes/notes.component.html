@@ -12,10 +12,9 @@
         <!-- Placeholder card -->
         <div class="card p-6 rounded-lg">
             <div class="text-center py-8">
-                <svg class="w-16 h-16 mx-auto mb-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
+                <div class="flex justify-center mb-4">
+                    <app-icon name="document" size="xl" customClass="opacity-40" [attr.style]="'width: 4rem; height: 4rem;'"></app-icon>
+                </div>
                 <p class="text-lg opacity-70">No notes yet</p>
                 <p class="text-sm mt-2 opacity-50">Create your first note to get started!</p>
             </div>
