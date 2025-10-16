@@ -1,0 +1,65 @@
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Search Notes</h1>
+
+    <!-- Search Bar -->
+    <div class="card p-6 rounded-lg mb-6">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <input type="text" placeholder="Search notes by title, content, or tags..."
+                class="w-full pl-12 pr-4 py-3 rounded-lg focus:outline-none bg-transparent"
+                style="border: 1px solid var(--color-cyber-accent);" />
+        </div>
+    </div>
+
+    <!-- Filter Tags -->
+    <div class="card p-6 rounded-lg mb-6">
+        <h3 class="text-lg font-semibold mb-4">Filter by Tags</h3>
+        <div class="flex flex-wrap gap-2">
+            <button class="btn-primary px-4 py-2 rounded-lg transition-all text-sm">
+                All Tags
+            </button>
+            <button class="btn-secondary px-4 py-2 rounded-lg transition-all text-sm">
+                JavaScript
+            </button>
+            <button class="btn-secondary px-4 py-2 rounded-lg transition-all text-sm">
+                Angular
+            </button>
+            <button class="btn-secondary px-4 py-2 rounded-lg transition-all text-sm">
+                TypeScript
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="card rounded-lg">
+        <div class="p-6" style="border-bottom: 1px solid var(--color-cyber-accent);">
+            <h3 class="text-lg font-semibold">Search Results</h3>
+            <p class="text-sm mt-1 opacity-60">0 notes found</p>
+        </div>
+
+        <div class="p-12 text-center">
+            <svg class="w-16 h-16 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <p class="text-lg opacity-70">No results found</p>
+            <p class="text-sm mt-2 opacity-50">Try searching for something or select a tag filter</p>
+        </div>
+    </div>
+
+    <!-- Search Tips -->
+    <div class="mt-6 card p-6 rounded-lg"
+        style="background: radial-gradient(at 70% 30%, rgba(24, 61, 228, 0.2) 0%, transparent 70%);">
+        <h3 class="text-sm font-semibold mb-2">💡 Search Tips</h3>
+        <ul class="text-sm space-y-1 opacity-80">
+            <li>• Use keywords from title or content</li>
+            <li>• Filter by tags for more specific results</li>
+            <li>• Fuzzy search powered by Fuse.js (coming soon)</li>
+        </ul>
+    </div>
+</div>
