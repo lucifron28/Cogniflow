@@ -1,4 +1,5 @@
 <div class="min-h-screen">
+    @if (authService.user$ | async; as user) {
     <nav class="nav">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
@@ -25,10 +26,19 @@
                     </a>
 
                     <app-theme-toggle />
+
+                    <div class="flex items-center gap-4 pl-4" style="border-left: 1px solid var(--color-cyber-accent);">
+                        <span class="text-sm opacity-60">{{ user.displayName || user.email }}</span>
+                        <button (click)="logout()"
+                            class="btn-secondary px-4 py-2 rounded-lg text-sm transition-all hover:scale-105">
+                            Logout
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
+    }
 
     <router-outlet />
 </div>
