@@ -1,44 +1,11 @@
-<div class="min-h-screen">
-    @if (authService.user$ | async; as user) {
-    <nav class="nav">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-glow">Cogniflow</h1>
+<app-search-modal />
 
-                <div class="flex items-center gap-6">
-                    <a routerLink="/notes" routerLinkActive="text-glow font-semibold"
-                        class="transition-colors hover:text-glow"
-                        [class.text-cyber-accent]="themeService.theme() === 'cyber-glow'"
-                        [class.text-gray-600]="themeService.theme() === 'electric-sky'">
-                        Notes
-                    </a>
-                    <a routerLink="/analytics" routerLinkActive="text-glow font-semibold"
-                        class="transition-colors hover:text-glow"
-                        [class.text-cyber-accent]="themeService.theme() === 'cyber-glow'"
-                        [class.text-gray-600]="themeService.theme() === 'electric-sky'">
-                        Analytics
-                    </a>
-                    <a routerLink="/search" routerLinkActive="text-glow font-semibold"
-                        class="transition-colors hover:text-glow"
-                        [class.text-cyber-accent]="themeService.theme() === 'cyber-glow'"
-                        [class.text-gray-600]="themeService.theme() === 'electric-sky'">
-                        Search
-                    </a>
-
-                    <app-theme-toggle />
-
-                    <div class="flex items-center gap-4 pl-4" style="border-left: 1px solid var(--color-cyber-accent);">
-                        <span class="text-sm opacity-60">{{ user.displayName || user.email }}</span>
-                        <button (click)="logout()"
-                            class="btn-secondary px-4 py-2 rounded-lg text-sm transition-all hover:scale-105">
-                            Logout
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+<div class="min-h-screen flex">
+    @if (showSidebar()) {
+    <app-sidebar />
     }
 
-    <router-outlet />
+    <main class="flex-1 transition-all duration-300" [style.margin-left]="showSidebar() ? sidebarWidth() + 'px' : '0'">
+        <router-outlet />
+    </main>
 </div>
