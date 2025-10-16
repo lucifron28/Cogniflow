@@ -75,18 +75,23 @@
 }
 
 /* Theme-aware styles */
+:root.cyber-glow .card,
 .cyber-glow .card {
-  background-color: var(--color-cyber-gray);
-  border: 1px solid var(--color-cyber-accent);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  background-color: var(--color-cyber-gray) !important;
+  border: 1px solid var(--color-cyber-accent) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 242, 254, 0.2), 0 4px 6px -2px rgba(0, 242, 254, 0.1) !important;
+  color: var(--color-cyber-accent);
 }
 
+:root.electric-sky .card,
 .electric-sky .card {
-  background-color: #ffffff;
-  border: 1px solid var(--color-electric-soft-blue);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background-color: #ffffff !important;
+  border: 1px solid var(--color-electric-soft-blue) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  color: #1f2937;
 }
 
+:root.cyber-glow .btn-primary,
 .cyber-glow .btn-primary {
   background-color: var(--color-cyber-dark-blue);
   border: 1px solid var(--color-cyber-accent);
@@ -95,26 +100,122 @@
   transition: box-shadow 0.3s ease;
 }
 
+:root.cyber-glow .btn-primary:hover,
 .cyber-glow .btn-primary:hover {
   box-shadow: 0 0 25px rgba(0, 242, 254, 0.8);
 }
 
+:root.electric-sky .btn-primary,
 .electric-sky .btn-primary {
   background-color: var(--color-electric-cyan);
   color: #ffffff;
   transition: background-color 0.3s ease;
 }
 
+:root.electric-sky .btn-primary:hover,
 .electric-sky .btn-primary:hover {
   background-color: var(--color-electric-neon);
 }
 
+:root.cyber-glow .nav,
 .cyber-glow .nav {
   background-color: var(--color-cyber-gray);
   border-bottom: 1px solid var(--color-cyber-accent);
 }
 
+:root.electric-sky .nav,
 .electric-sky .nav {
   background-color: #ffffff;
   border-bottom: 1px solid var(--color-electric-light-gray);
+}
+
+/* Global theme text colors */
+:root.cyber-glow,
+:root.cyber-glow body {
+  background: linear-gradient(90deg, #000000 0%, #000957 60%, #183DE4 100%);
+  color: var(--color-cyber-accent);
+}
+
+:root.electric-sky,
+:root.electric-sky body {
+  background: linear-gradient(135deg, #fdfbfb 0%, #c2e9fb 100%);
+  color: #1f2937;
+}
+
+/* Headings */
+:root.cyber-glow h1,
+:root.cyber-glow h2,
+:root.cyber-glow h3 {
+  color: var(--color-cyber-accent);
+  text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+}
+
+:root.electric-sky h1,
+:root.electric-sky h2,
+:root.electric-sky h3 {
+  color: #1f2937;
+}
+
+/* Buttons - secondary style */
+:root.cyber-glow .btn-secondary,
+.cyber-glow .btn-secondary {
+  background-color: rgba(0, 242, 254, 0.1);
+  border: 1px solid var(--color-cyber-accent);
+  color: var(--color-cyber-accent);
+  transition: all 0.3s ease;
+}
+
+:root.cyber-glow .btn-secondary:hover,
+.cyber-glow .btn-secondary:hover {
+  background-color: rgba(0, 242, 254, 0.2);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+}
+
+:root.electric-sky .btn-secondary,
+.electric-sky .btn-secondary {
+  background-color: var(--color-electric-light-gray);
+  color: #4b5563;
+  transition: all 0.3s ease;
+}
+
+:root.electric-sky .btn-secondary:hover,
+.electric-sky .btn-secondary:hover {
+  background-color: #d1d5db;
+}
+
+/* Input fields */
+:root.cyber-glow input,
+:root.cyber-glow textarea {
+  background-color: rgba(26, 37, 37, 0.8);
+  border: 1px solid var(--color-cyber-accent);
+  color: var(--color-cyber-accent);
+  caret-color: var(--color-cyber-accent);
+}
+
+:root.cyber-glow input::placeholder,
+:root.cyber-glow textarea::placeholder {
+  color: rgba(0, 242, 254, 0.4);
+}
+
+:root.electric-sky input,
+:root.electric-sky textarea {
+  background-color: #ffffff;
+  border: 1px solid var(--color-electric-light-gray);
+  color: #1f2937;
+}
+
+:root.electric-sky input::placeholder,
+:root.electric-sky textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Container backgrounds */
+:root.cyber-glow .container-bg {
+  background-color: rgba(26, 37, 37, 0.6);
+  border: 1px solid var(--color-cyber-accent);
+}
+
+:root.electric-sky .container-bg {
+  background-color: #ffffff;
+  border: 1px solid var(--color-electric-light-gray);
 }
