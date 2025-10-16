@@ -8,4 +8,7 @@ import { RouterLink } from '@angular/router';
   imports: [CommonModule, RouterLink],
   templateUrl: './notes.component.html'
 })
-export class NotesComponent {}
+export class NotesComponent {
+    constructor() {
+    }
+}
