@@ -1,0 +1,97 @@
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Study Analytics</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm mb-1 opacity-60">Total Notes</p>
+                    <p class="text-3xl font-bold text-glow">0</p>
+                </div>
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+                    style="background-color: rgba(0, 242, 254, 0.1);">
+                    <svg class="w-6 h-6" style="color: var(--color-cyber-accent);" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Time -->
+        <div class="card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm mb-1 opacity-60">Study Time</p>
+                    <p class="text-3xl font-bold text-glow">0h</p>
+                </div>
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+                    style="background-color: rgba(34, 197, 94, 0.1);">
+                    <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm mb-1 opacity-60">Active Streak</p>
+                    <p class="text-3xl font-bold text-glow">0 days</p>
+                </div>
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+                    style="background-color: rgba(249, 115, 22, 0.1);">
+                    <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tags Used -->
+        <div class="card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm mb-1 opacity-60">Tags Used</p>
+                    <p class="text-3xl font-bold text-glow">0</p>
+                </div>
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center"
+                    style="background-color: rgba(168, 85, 247, 0.1);">
+                    <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="card p-6 rounded-lg">
+            <h3 class="text-lg font-semibold mb-4">Study Activity</h3>
+            <div class="h-64 flex items-center justify-center rounded opacity-50"
+                style="background-color: rgba(0, 242, 254, 0.05);">
+                <p>Chart will be displayed here (ng2-charts)</p>
+            </div>
+        </div>
+
+        <div class="card p-6 rounded-lg">
+            <h3 class="text-lg font-semibold mb-4">Popular Tags</h3>
+            <div class="h-64 flex items-center justify-center rounded opacity-50"
+                style="background-color: rgba(0, 242, 254, 0.05);">
+                <p>Tag distribution chart (ng2-charts)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-6 card p-6 rounded-lg">
+        <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
+        <div class="text-center py-8">
+            <p class="opacity-50">No activity to display yet</p>
+        </div>
+    </div>
+</div>
