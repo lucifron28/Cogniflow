@@ -10,8 +10,10 @@ package-lock.json
 dist/
 out-tsc/
 
-# Angular environment files
-src/environments/*.ts
+# Angular environment files (keep example files)
+src/environments/environment.ts
+src/environments/environment.prod.ts
+!src/environments/environment.example.ts
 
 # Firebase
 .firebase/
@@ -77,3 +79,5 @@ junit.xml
 
 # FUSE.js cache (if any)
 fuse.js.cache
+
+.github/prompts/
