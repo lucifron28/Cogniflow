@@ -1,0 +1,70 @@
+<div class="container mx-auto p-6 max-w-4xl">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Note Editor</h1>
+        <div class="flex gap-3">
+            <button routerLink="/notes" class="btn-secondary px-4 py-2 rounded-lg transition-all">
+                Cancel
+            </button>
+            <button class="btn-primary px-6 py-2 rounded-lg transition-all shadow-sm hover:scale-105">
+                Save Note
+            </button>
+        </div>
+    </div>
+
+    <div class="card rounded-lg overflow-hidden">
+        <!-- Title Input -->
+        <div class="p-4" style="border-bottom: 1px solid var(--color-cyber-accent);">
+            <input type="text" placeholder="Note Title..."
+                class="w-full text-2xl font-semibold focus:outline-none bg-transparent" />
+        </div>
+
+        <div class="p-4" style="border-bottom: 1px solid var(--color-cyber-accent);">
+            <div class="flex flex-wrap gap-2 mb-2">
+                <span class="px-3 py-1 rounded-full text-sm transition-all"
+                    style="background-color: rgba(0, 242, 254, 0.1); color: var(--color-cyber-accent); border: 1px solid var(--color-cyber-accent);">
+                    Sample Tag
+                    <button class="ml-2 hover:opacity-70">×</button>
+                </span>
+            </div>
+            <input type="text" placeholder="Add tags..." class="w-full text-sm focus:outline-none bg-transparent" />
+        </div>
+
+        <!-- Markdown Editor Area -->
+        <div class="p-6">
+            <textarea placeholder="Start writing your note in Markdown..."
+                class="w-full h-96 focus:outline-none resize-none font-mono text-sm bg-transparent"></textarea>
+        </div>
+
+        <!-- Editor Toolbar -->
+        <div class="p-4 opacity-60" style="border-top: 1px solid var(--color-cyber-accent);">
+            <div class="flex justify-between items-center">
+                <div class="flex gap-2 text-sm">
+                    <span>Markdown supported</span>
+                    <span>•</span>
+                    <span>0 words</span>
+                </div>
+                <button class="text-sm btn-secondary px-3 py-1 rounded">
+                    Preview
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Panel (Placeholder) -->
+    <div class="mt-6 card rounded-lg p-6"
+        style="background: radial-gradient(at 70% 30%, rgba(24, 61, 228, 0.2) 0%, transparent 70%);">
+        <h3 class="text-lg font-semibold mb-2">✨ AI Assistant</h3>
+        <p class="text-sm mb-4 opacity-70">Get help with your note using AI-powered features</p>
+        <div class="flex gap-3 flex-wrap">
+            <button class="btn-secondary px-4 py-2 rounded-lg text-sm">
+                Summarize
+            </button>
+            <button class="btn-secondary px-4 py-2 rounded-lg text-sm">
+                Generate Questions
+            </button>
+            <button class="btn-secondary px-4 py-2 rounded-lg text-sm">
+                Explain Concepts
+            </button>
+        </div>
+    </div>
+</div>
