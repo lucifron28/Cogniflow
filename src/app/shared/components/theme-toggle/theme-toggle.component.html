@@ -1,7 +1,9 @@
 <button (click)="themeService.toggleTheme()"
-    class="relative w-14 h-7 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyber-accent"
+    class="relative w-14 h-7 rounded-full transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-cyber-accent"
     [class.bg-cyber-dark-blue]="themeService.theme() === 'cyber-glow'"
     [class.bg-electric-soft-blue]="themeService.theme() === 'electric-sky'"
+    [class.border-cyber-accent/30]="themeService.theme() === 'cyber-glow'"
+    [class.border-electric-neon/30]="themeService.theme() === 'electric-sky'"
     [attr.aria-label]="themeService.isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
 
     <!-- Toggle Circle -->
@@ -19,7 +21,7 @@
 
         <!-- Sun Icon (Light Mode) -->
         @if (themeService.theme() === 'electric-sky') {
-        <app-icon name="sun" size="sm" customClass="text-white"></app-icon>
+        <app-icon name="sun" size="sm" customClass="text-electric-dark-blue"></app-icon>
         }
     </span>
 </button>
