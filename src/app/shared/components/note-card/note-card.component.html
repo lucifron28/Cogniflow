@@ -1,0 +1,31 @@
+<div class="card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all duration-300 cursor-pointer">
+    <h3 class="text-xl font-semibold mb-2">
+        <span class="text-glow">{{ note?.title || 'Untitled' }}</span>
+    </h3>
+    <p class="text-sm mb-3 line-clamp-2 opacity-80">
+        {{ note?.content || 'No content' }}
+    </p>
+    <div class="flex flex-wrap gap-2">
+        @for (tag of note?.tags; track tag) {
+        <span class="px-3 py-1 rounded-full text-xs font-medium transition-all duration-200"
+            style="background-color: rgba(0, 242, 254, 0.1); color: var(--color-cyber-accent); border: 1px solid var(--color-cyber-accent);">
+            {{ tag }}
+        </span>
+        }
+    </div>
+    <div class="mt-4 pt-4 flex justify-between items-center text-xs opacity-60"
+        style="border-top: 1px solid var(--color-cyber-accent);">
+        <span>{{ note?.updatedAt | date:'short' }}</span>
+        <div class="flex gap-3">
+            <button class="btn-primary px-3 py-1 rounded text-xs font-medium hover:scale-105 transition-transform">
+                Edit
+            </button>
+            <button class="px-3 py-1 rounded text-xs font-medium transition-all duration-200"
+                style="background-color: rgba(220, 38, 38, 0.2); color: #ef4444; border: 1px solid #ef4444;"
+                onmouseover="this.style.boxShadow='0 0 15px rgba(239, 68, 68, 0.6)'"
+                onmouseout="this.style.boxShadow='none'">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
