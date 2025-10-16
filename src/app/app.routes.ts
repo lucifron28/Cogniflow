@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { NotesComponent } from './features/notes/notes.component';
 import { NoteEditorComponent } from './features/notes/note-editor/note-editor.component';
 import { AnalyticsComponent } from './features/analytics/analytics.component';
-import { SearchComponent } from './features/search/search.component';
 import { AuthComponent } from './features/auth/auth.component';
 import { authGuard } from './core/guards/auth.guard';
 import { publicGuard } from './core/guards/public.guard';
@@ -32,11 +31,6 @@ export const routes: Routes = [
   { 
     path: 'analytics', 
     component: AnalyticsComponent,
-    canActivate: [authGuard]
-  },
-  { 
-    path: 'search', 
-    component: SearchComponent,
     canActivate: [authGuard]
   },
   { path: '**', redirectTo: '/notes' }
