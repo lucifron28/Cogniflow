@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from '@angular/fire/firestore';
 import { provideMarkdown } from 'ngx-markdown';
 import { environment } from '../environments/environment';
 
@@ -18,6 +18,8 @@ export const appConfig: ApplicationConfig = {
     provideMarkdown(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore())
+    provideFirestore(() => initializeFirestore(initializeApp(environment.firebase), {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+    }))
   ]
 };
