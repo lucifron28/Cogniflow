@@ -133,6 +133,17 @@
   vertical-align: middle;
 }
 
+/* Strike through completed tasks */
+.markdown-preview li:has(input[type="checkbox"]:checked) {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Keep checkbox itself not struck through */
+.markdown-preview li:has(input[type="checkbox"]:checked) input[type="checkbox"] {
+  text-decoration: none;
+}
+
 /* Inline code */
 .markdown-preview code {
   background-color: rgba(0, 242, 254, 0.15);
@@ -354,6 +365,12 @@
 /* Light theme task checkboxes */
 .electric-sky .markdown-preview li input[type="checkbox"] {
   accent-color: #0891b2;
+}
+
+/* Light theme strike through completed tasks */
+.electric-sky .markdown-preview li:has(input[type="checkbox"]:checked) {
+  text-decoration: line-through;
+  opacity: 0.5;
 }
 
 /* Light theme syntax highlighting */
