@@ -1,0 +1,63 @@
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Search Notes</h1>
+
+    <!-- Search Bar -->
+    <div class="card p-6 rounded-lg mb-6">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <app-icon name="search" size="lg" customClass="opacity-40"></app-icon>
+            </div>
+            <input type="text" placeholder="Search notes by title, content, or tags..."
+                class="w-full pl-12 pr-4 py-3 rounded-lg focus:outline-none bg-transparent"
+                style="border: 1px solid var(--color-cyber-accent);" />
+        </div>
+    </div>
+
+    <!-- Filter Tags -->
+    <div class="card p-6 rounded-lg mb-6">
+        <h3 class="text-lg font-semibold mb-4">Filter by Tags</h3>
+        <div class="flex flex-wrap gap-2">
+            <button class="btn-primary px-4 py-2 rounded-lg transition-all text-sm">
+                All Tags
+            </button>
+            <button class="btn-secondary px-4 py-2 rounded-lg transition-all text-sm">
+                JavaScript
+            </button>
+            <button class="btn-secondary px-4 py-2 rounded-lg transition-all text-sm">
+                Angular
+            </button>
+            <button class="btn-secondary px-4 py-2 rounded-lg transition-all text-sm">
+                TypeScript
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="card rounded-lg">
+        <div class="p-6" style="border-bottom: 1px solid var(--color-cyber-accent);">
+            <h3 class="text-lg font-semibold">Search Results</h3>
+            <p class="text-sm mt-1 opacity-60">0 notes found</p>
+        </div>
+
+        <!-- Empty State -->
+        <div class="card p-12 rounded-lg text-center">
+            <div class="flex justify-center mb-4">
+                <app-icon name="search" size="xl" customClass="opacity-30"
+                    [attr.style]="'width: 6rem; height: 6rem;'"></app-icon>
+            </div>
+            <h3 class="text-xl mb-2">Search Your Notes</h3>
+            <p class="opacity-60">Enter keywords to find notes across titles, content, and tags</p>
+        </div>
+    </div>
+
+    <!-- Search Tips -->
+    <div class="mt-6 card p-6 rounded-lg"
+        style="background: radial-gradient(at 70% 30%, rgba(24, 61, 228, 0.2) 0%, transparent 70%);">
+        <h3 class="text-sm font-semibold mb-2">💡 Search Tips</h3>
+        <ul class="text-sm space-y-1 opacity-80">
+            <li>• Use keywords from title or content</li>
+            <li>• Filter by tags for more specific results</li>
+            <li>• Fuzzy search powered by Fuse.js (coming soon)</li>
+        </ul>
+    </div>
+</div>
