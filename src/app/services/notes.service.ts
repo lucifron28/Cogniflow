@@ -1,4 +1,4 @@
-import { Injectable, inject, EnvironmentInjector, runInInjectionContext } from '@angular/core';
+import { Injectable, inject, EnvironmentInjector, runInInjectionContext, OnDestroy } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -8,27 +8,67 @@ import {
   deleteDoc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   where,
   // orderBy, // requires composite index
   Timestamp,
   CollectionReference,
   DocumentData,
+  Unsubscribe,
 } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
-import { Observable, map, of, catchError } from 'rxjs';
+import { Observable, BehaviorSubject, ReplaySubject, map, of, catchError, shareReplay, switchMap, filter, take } from 'rxjs';
 import { Note, NoteMetadata, NoteFilter } from '../core/models/note.model';
 
 @Injectable({ providedIn: 'root' })
-export class NotesService {
+export class NotesService implements OnDestroy {
   private firestore = inject(Firestore);
   private auth = inject(Auth);
   private envInjector = inject(EnvironmentInjector);
   private notesCollectionRef: CollectionReference<DocumentData>;
 
+  // Real-time listener state
+  private notesSubject = new BehaviorSubject<Note[]>([]);
+  private notesListener: Unsubscribe | null = null;
+  
+  // In-memory cache for individual notes (using ReplaySubject to avoid initial null)
+  private noteCache = new Map<string, ReplaySubject<Note | null>>();
+  private noteListeners = new Map<string, Unsubscribe>();
+  
+  // Track auth readiness
+  private authReady = new BehaviorSubject<boolean>(false);
+
   constructor() {
     // Create collection ref inside injection context
     this.notesCollectionRef = collection(this.firestore, 'notes');
+    
+    // Start listening when user is authenticated
+    this.auth.onAuthStateChanged(user => {
+      this.authReady.next(true); // Mark auth as ready
+      
+      if (user) {
+        this.startNotesListener();
+      } else {
+        // Clean up when user logs out
+        this.notesListener?.();
+        this.notesListener = null;
+        this.notesSubject.next([]);
+        
+        // Clean up individual note listeners
+        this.noteListeners.forEach(unsub => unsub());
+        this.noteListeners.clear();
+        this.noteCache.forEach(subject => subject.complete());
+        this.noteCache.clear();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    // Clean up all listeners
+    this.notesListener?.();
+    this.noteListeners.forEach(unsub => unsub());
+    this.noteCache.forEach(subject => subject.complete());
   }
 
   private get notesCollection(): CollectionReference<DocumentData> {
@@ -76,6 +116,94 @@ export class NotesService {
     } as Note;
   }
 
+  // Real-time listeners for notes list
+  private startNotesListener(): void {
+    // Prevent multiple listeners
+    if (this.notesListener) {
+      return;
+    }
+    
+    const userId = this.getCurrentUserId();
+    if (!userId) {
+      this.notesSubject.next([]);
+      return;
+    }
+
+    const q = query(this.notesCollection, where('userId', '==', userId));
+    
+    runInInjectionContext(this.envInjector, () => {
+      this.notesListener = onSnapshot(
+        q,
+        (snapshot) => {
+          const notes = snapshot.docs.map(d => this.convertTimestamps({ id: d.id, ...d.data() }));
+          this.notesSubject.next(notes);
+          console.log('Notes updated:', notes.length, 'notes loaded');
+        },
+        (error) => {
+          console.error('Error in notes listener:', error);
+          this.notesSubject.next([]);
+        }
+      );
+    });
+  }
+
+  // Real-time listener for individual note
+  private startNoteListener(noteId: string): Observable<Note | null> {
+    if (this.noteCache.has(noteId)) {
+      return this.noteCache.get(noteId)!.asObservable();
+    }
+
+    const userId = this.getCurrentUserId();
+    if (!userId) {
+      const subject = new ReplaySubject<Note | null>(1);
+      subject.next(null);
+      this.noteCache.set(noteId, subject);
+      return subject.asObservable();
+    }
+
+    const subject = new ReplaySubject<Note | null>(1);
+    this.noteCache.set(noteId, subject);
+
+    const noteDocRef = doc(this.firestore, `notes/${noteId}`);
+    
+    runInInjectionContext(this.envInjector, () => {
+      const unsubscribe = onSnapshot(
+        noteDocRef,
+        (snapshot) => {
+          if (!snapshot.exists()) {
+            subject.next(null);
+            return;
+          }
+          const data: any = { id: snapshot.id, ...snapshot.data() };
+          if (data.userId !== userId) {
+            subject.next(null);
+            return;
+          }
+          subject.next(this.convertTimestamps(data));
+        },
+        (error) => {
+          console.error('Error in note listener:', error);
+          subject.next(null);
+        }
+      );
+      this.noteListeners.set(noteId, unsubscribe);
+    });
+
+    return subject.asObservable();
+  }
+
+  // Invalidate cache for a specific note
+  private invalidateNoteCache(noteId: string): void {
+    const subject = this.noteCache.get(noteId);
+    if (subject) {
+      const unsubscribe = this.noteListeners.get(noteId);
+      unsubscribe?.();
+      this.noteListeners.delete(noteId);
+      subject.complete();
+      this.noteCache.delete(noteId);
+    }
+  }
+
   // Create
   async createNote(noteData: Omit<Note, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<string> {
     const userId = this.getCurrentUserId();
@@ -95,23 +223,13 @@ export class NotesService {
     return docRef.id;
   }
 
-  // Read (Observable)
+  // Read (Observable) - now uses real-time listener with cache
   getNote(noteId: string): Observable<Note | null> {
-    const userId = this.getCurrentUserId();
-    if (!userId) return of(null);
-
-    const noteDocRef = doc(this.firestore, `notes/${noteId}`);
-    return this.inCtxObs(() => getDoc(noteDocRef)).pipe(
-      map((snap) => {
-        if (!snap.exists()) return null;
-        const data: any = { id: snap.id, ...snap.data() };
-        if (data.userId !== userId) return null;
-        return this.convertTimestamps(data);
-      }),
-      catchError((err) => {
-        console.error('Error fetching note:', err);
-        return of(null);
-      })
+    // Wait for auth to be ready before starting the listener
+    return this.authReady.pipe(
+      filter(ready => ready),
+      take(1),
+      switchMap(() => this.startNoteListener(noteId))
     );
   }
 
@@ -155,25 +273,25 @@ export class NotesService {
     if (!snap.exists() || snap.data()['userId'] !== userId) throw new Error('Note not found or access denied');
 
     await this.inCtxPromise(() => deleteDoc(noteDocRef));
+    
+    // Invalidate the cache for this note
+    this.invalidateNoteCache(noteId);
   }
 
-  // List (Observable)
+  // List (Observable) - now uses real-time listener with filtering
   getNotes(filter?: NoteFilter): Observable<Note[]> {
-    const userId = this.getCurrentUserId();
-    if (!userId) return of([]);
-
-    let q = query(this.notesCollection, where('userId', '==', userId));
-    if (filter?.isPinned !== undefined) q = query(q, where('isPinned', '==', filter.isPinned));
-    if (filter?.isFavorite !== undefined) q = query(q, where('isFavorite', '==', filter.isFavorite));
-    if (filter?.tags && filter.tags.length > 0) q = query(q, where('tags', 'array-contains', filter.tags[0]));
-    // Sorting in-memory to avoid composite index for now
-
-    return this.inCtxObs(() => getDocs(q)).pipe(
-      map((qs) => {
-        const notes = qs.docs.map((d) => this.convertTimestamps({ id: d.id, ...d.data() }));
+    return this.notesSubject.asObservable().pipe(
+      map((notes) => {
         let out = notes;
 
-        if (filter?.tags && filter.tags.length > 1) {
+        // Apply filters
+        if (filter?.isPinned !== undefined) {
+          out = out.filter(n => n.isPinned === filter.isPinned);
+        }
+        if (filter?.isFavorite !== undefined) {
+          out = out.filter(n => n.isFavorite === filter.isFavorite);
+        }
+        if (filter?.tags && filter.tags.length > 0) {
           out = out.filter((n) => filter.tags!.every((t) => n.tags.includes(t)));
         }
         if (filter?.searchQuery) {
@@ -186,6 +304,7 @@ export class NotesService {
           );
         }
 
+        // Sort
         const sortField = filter?.sortBy || 'updatedAt';
         const sortDirection = filter?.sortOrder || 'desc';
         out.sort((a, b) => {
@@ -202,10 +321,7 @@ export class NotesService {
 
         return out;
       }),
-      catchError((err) => {
-        console.error('Error fetching notes:', err);
-        return of([]);
-      })
+      shareReplay({ bufferSize: 1, refCount: true })
     );
   }
 
