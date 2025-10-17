@@ -20,6 +20,8 @@ export interface NoteMetadata {
   tags: string[];
   wordCount: number;
   linkedNotesCount: number;
+  contentPreview?: string;
+  folderId?: string | null;
   createdAt: Date;
   updatedAt: Date;
   isPinned?: boolean;
