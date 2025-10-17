@@ -156,6 +156,46 @@
             [class.placeholder-electric-text/40]="themeService.theme() === 'electric-sky'" />
     </div>
 
+    <!-- Tags Section -->
+    <div class="px-6 py-4 border-b" [class.bg-cyber-darker]="themeService.theme() === 'cyber-glow'"
+        [class.bg-electric-light]="themeService.theme() === 'electric-sky'"
+        [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
+        [class.border-electric-accent/20]="themeService.theme() === 'electric-sky'">
+
+        <div class="flex items-start gap-3 px-4">
+            <!-- Tags Label -->
+            <div class="flex items-center gap-2 pt-2 shrink-0">
+                <app-icon name="tag" size="sm" [class.text-cyber-accent]="themeService.theme() === 'cyber-glow'"
+                    [class.text-electric-accent]="themeService.theme() === 'electric-sky'"></app-icon>
+                <span class="text-sm font-medium" [class.text-cyber-text/60]="themeService.theme() === 'cyber-glow'"
+                    [class.text-electric-text/60]="themeService.theme() === 'electric-sky'">Tags</span>
+            </div>
+
+            <!-- Tags Chips Container -->
+            <div class="flex flex-wrap gap-2 flex-1">
+                <!-- Existing Tags -->
+                @for (tag of tags(); track $index) {
+                <div class="tag-chip group" [class.cyber-chip]="themeService.theme() === 'cyber-glow'"
+                    [class.electric-chip]="themeService.theme() === 'electric-sky'">
+                    <span>{{ tag }}</span>
+                    <button type="button" (click)="removeTag($index)" class="remove-tag-btn"
+                        [class.text-cyber-accent]="themeService.theme() === 'cyber-glow'"
+                        [class.text-electric-accent]="themeService.theme() === 'electric-sky'" aria-label="Remove tag">
+                        <app-icon name="x" size="xs"></app-icon>
+                    </button>
+                </div>
+                }
+
+                <!-- Tag Input -->
+                <input #tagInput type="text" [(ngModel)]="currentTag"
+                    (keydown.enter)="addTag(); $event.preventDefault()"
+                    (keydown.comma)="addTag(); $event.preventDefault()" placeholder="Add tag..." class="tag-input"
+                    [class.cyber-input]="themeService.theme() === 'cyber-glow'"
+                    [class.electric-input]="themeService.theme() === 'electric-sky'" />
+            </div>
+        </div>
+    </div>
+
     <!-- Editor Container -->
     <div class="flex-1 overflow-hidden" [class.bg-cyber-black]="themeService.theme() === 'cyber-glow'"
         [class.bg-electric-white]="themeService.theme() === 'electric-sky'" (keydown)="handleKeyDown($event)">
