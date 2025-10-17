@@ -159,6 +159,11 @@ export class FileTreeComponent implements OnInit {
       this.expandedFolders.set(new Set(expanded));
     }
   }
+  
+  // Navigate to folder view
+  openFolder(folderId: string) {
+    this.router.navigate(['/notes/folder', folderId]);
+  }
 
   // Navigate to note
   openNote(noteId: string) {
