@@ -1,0 +1,66 @@
+/* Sort Select */
+.sort-select {
+  background-color: rgba(26, 37, 37, 0.8);
+  border-color: var(--color-cyber-accent);
+  color: var(--color-cyber-accent);
+}
+
+.sort-select:focus {
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+}
+
+/* Sort Toggle Button */
+.sort-toggle {
+  background-color: rgba(26, 37, 37, 0.8);
+  border-color: var(--color-cyber-accent);
+  color: var(--color-cyber-accent);
+}
+
+.sort-toggle:hover {
+  background-color: rgba(0, 242, 254, 0.1);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+}
+
+/* Light Theme */
+:host-context(.electric-sky) .sort-select {
+  background-color: #ffffff;
+  border-color: var(--color-electric-light-gray);
+  color: #1f2937;
+}
+
+:host-context(.electric-sky) .sort-select:focus {
+  border-color: var(--color-electric-cyan);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+}
+
+:host-context(.electric-sky) .sort-toggle {
+  background-color: #ffffff;
+  border-color: var(--color-electric-light-gray);
+  color: #1f2937;
+}
+
+:host-context(.electric-sky) .sort-toggle:hover {
+  background-color: rgba(0, 212, 255, 0.1);
+  border-color: var(--color-electric-cyan);
+}
+
+/* Line Clamp Utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Selected Note Highlight (Keyboard Navigation) */
+.note-card.selected-note {
+  outline: 2px solid var(--color-cyber-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.5) !important;
+}
+
+:host-context(.electric-sky) .note-card.selected-note {
+  outline: 2px solid var(--color-electric-cyan);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.4) !important;
+}
