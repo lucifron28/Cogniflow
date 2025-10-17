@@ -151,6 +151,31 @@
   white-space: nowrap;
 }
 
+/* Clickable folder names */
+.folder-node .node-name {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.folder-node .node-name:hover {
+  color: var(--cyber-accent);
+}
+
+:root.electric-sky .folder-node .node-name:hover {
+  color: var(--electric-neon);
+}
+
+.folder-node app-icon[name="folder"],
+.folder-node app-icon[name="folder-open"] {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.folder-node app-icon[name="folder"]:hover,
+.folder-node app-icon[name="folder-open"]:hover {
+  opacity: 0.8;
+}
+
 .node-children {
   margin-left: 1rem;
   padding-left: 0.5rem;
