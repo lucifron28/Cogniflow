@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Cogniflow Banner](/banner/banner.png)
+<img src="/banner/banner.png" alt="Cogniflow Banner" width="420" />
 
 **AI-Powered Markdown Study Notebook**
 
