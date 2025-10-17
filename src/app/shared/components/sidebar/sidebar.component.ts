@@ -4,13 +4,14 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 import { IconComponent } from '../icon/icon.component';
 import { FileTreeComponent } from '../file-tree/file-tree.component';
+import { AiModalComponent } from '../ai-modal/ai-modal.component';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, ThemeToggleComponent, IconComponent, FileTreeComponent],
+  imports: [CommonModule, RouterLink, RouterLinkActive, ThemeToggleComponent, IconComponent, FileTreeComponent, AiModalComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
@@ -29,9 +30,18 @@ export class SidebarComponent implements OnInit, OnDestroy {
   showTags = signal(true);
   showTasks = signal(false);
   showSettings = signal(false);
+  showAIModal = signal(false);
 
   toggleSidebar() {
     this.isCollapsed.set(!this.isCollapsed());
+  }
+
+  openAIModal() {
+    this.showAIModal.set(true);
+  }
+
+  closeAIModal() {
+    this.showAIModal.set(false);
   }
 
   toggleSettingsMenu() {
