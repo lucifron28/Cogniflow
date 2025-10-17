@@ -5,6 +5,7 @@ import { AnalyticsComponent } from './features/analytics/analytics.component';
 import { AuthComponent } from './features/auth/auth.component';
 import { authGuard } from './core/guards/auth.guard';
 import { publicGuard } from './core/guards/public.guard';
+import { noteResolver } from './core/resolvers/note.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/notes', pathMatch: 'full' },
@@ -26,7 +27,8 @@ export const routes: Routes = [
   { 
     path: 'notes/:id', 
     component: NoteEditorComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    resolve: { note: noteResolver }
   },
   { 
     path: 'analytics', 
