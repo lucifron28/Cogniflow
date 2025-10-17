@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="/banner/banner.png" alt="Cogniflow Banner" width="420" />
+<img src="/banner/cogniflow-banner.png" alt="Cogniflow Banner" width="420" />
 
 **AI-Powered Markdown Study Notebook**
 
