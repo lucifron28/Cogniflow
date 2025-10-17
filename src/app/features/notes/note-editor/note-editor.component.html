@@ -226,12 +226,15 @@
                     <app-icon name="pencil" size="md"></app-icon>
                     Markdown Editor
                 </div>
+
+                <!-- Editor Textarea -->
                 <textarea [(ngModel)]="content" placeholder="Start writing in markdown..."
-                    class="flex-1 w-full p-6 bg-transparent resize-none outline-none font-mono"
+                    class="flex-1 w-full p-6 bg-transparent resize-none outline-none font-mono leading-relaxed"
                     [class.text-cyber-text]="themeService.theme() === 'cyber-glow'"
                     [class.text-electric-text]="themeService.theme() === 'electric-sky'"
                     [class.placeholder-cyber-text/40]="themeService.theme() === 'cyber-glow'"
-                    [class.placeholder-electric-text/40]="themeService.theme() === 'electric-sky'"></textarea>
+                    [class.placeholder-electric-text/40]="themeService.theme() === 'electric-sky'"
+                    spellcheck="false"></textarea>
             </div>
 
             <!-- Divider -->
@@ -263,11 +266,12 @@
         @if (!isLoading() && editorView() === 'editor') {
         <div class="h-full">
             <textarea [(ngModel)]="content" placeholder="Start writing in markdown..."
-                class="w-full h-full p-6 bg-transparent resize-none outline-none font-mono"
+                class="w-full h-full p-6 bg-transparent resize-none outline-none font-mono leading-relaxed"
                 [class.text-cyber-text]="themeService.theme() === 'cyber-glow'"
                 [class.text-electric-text]="themeService.theme() === 'electric-sky'"
                 [class.placeholder-cyber-text/40]="themeService.theme() === 'cyber-glow'"
-                [class.placeholder-electric-text/40]="themeService.theme() === 'electric-sky'"></textarea>
+                [class.placeholder-electric-text/40]="themeService.theme() === 'electric-sky'"
+                spellcheck="false"></textarea>
         </div>
         }
 

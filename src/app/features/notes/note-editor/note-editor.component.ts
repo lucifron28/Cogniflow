@@ -30,6 +30,7 @@ type EditorView = 'split' | 'editor' | 'preview';
 })
 export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('markdownPreview') previewRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('editorTextarea') editorTextareaRef!: ElementRef<HTMLTextAreaElement>;
   
   private route = inject(ActivatedRoute);
   themeService = inject(ThemeService);
@@ -62,6 +63,13 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
     return text ? text.split(/\s+/).length : 0;
   });
   charCount = computed(() => this.content().length);
+  
+  // Syntax highlighting for markdown editor
+  highlightedContent = computed<SafeHtml>(() => {
+    const text = this.content();
+    const highlighted = this.highlightMarkdown(text);
+    return this.sanitizer.bypassSecurityTrustHtml(highlighted);
+  });
   
   processedContent = computed(() => {
     let processed = this.content();
@@ -126,6 +134,33 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
       return `<li>${text}</li>`;
     };
 
+    // Custom code block renderer with language label and copy button
+    renderer.code = (code: any) => {
+      const lang = code.lang || 'text';
+      const escapedCode = code.text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+      
+      return `
+        <div class="code-block-wrapper">
+          <div class="code-block-header">
+            <span class="code-block-language">${lang}</span>
+            <button class="code-block-copy-btn" data-code="${escapedCode.replace(/"/g, '&quot;')}" title="Copy code">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span class="copy-text">Copy</span>
+            </button>
+          </div>
+          <pre class="language-${lang}"><code class="language-${lang}">${escapedCode}</code></pre>
+        </div>
+      `;
+    };
+
     marked.use({
       gfm: true,
       breaks: false,
@@ -139,6 +174,7 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
       setTimeout(() => {
         this.highlightCode();
         this.attachCheckboxListeners();
+        this.attachCopyButtonListeners();
       }, 0);
     });
     
@@ -497,5 +533,110 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
     
     // Update the content
     this.content.set(lines.join('\n'));
+  }
+
+  private attachCopyButtonListeners() {
+    const copyButtons = this.elementRef.nativeElement.querySelectorAll('.code-block-copy-btn');
+    
+    copyButtons.forEach((button: HTMLButtonElement) => {
+      // Remove old listener by cloning
+      const newButton = button.cloneNode(true) as HTMLButtonElement;
+      button.replaceWith(newButton);
+      
+      newButton.addEventListener('click', () => {
+        const encodedCode = newButton.getAttribute('data-code') || '';
+        const code = this.decodeHtmlEntities(encodedCode);
+        
+        navigator.clipboard.writeText(code).then(() => {
+          // Visual feedback
+          const copyText = newButton.querySelector('.copy-text');
+          if (copyText) {
+            const originalText = copyText.textContent;
+            copyText.textContent = 'Copied!';
+            newButton.classList.add('copied');
+            
+            setTimeout(() => {
+              copyText.textContent = originalText;
+              newButton.classList.remove('copied');
+            }, 2000);
+          }
+        }).catch(err => {
+          console.error('Failed to copy code:', err);
+        });
+      });
+    });
+  }
+
+  private decodeHtmlEntities(text: string): string {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  }
+
+  // Sync scroll between textarea and highlighted backdrop
+  syncScroll(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    const backdrop = textarea.previousElementSibling as HTMLElement;
+    if (backdrop) {
+      backdrop.scrollTop = textarea.scrollTop;
+      backdrop.scrollLeft = textarea.scrollLeft;
+    }
+  }
+
+  // Markdown syntax highlighting
+  private highlightMarkdown(text: string): string {
+    if (!text) return '';
+    
+    // Escape HTML first
+    let highlighted = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    
+    // Code blocks (must be before other patterns to avoid conflicts)
+    highlighted = highlighted.replace(/^```(\w*)\n([\s\S]*?)^```$/gm, (match, lang, code) => {
+      return `<span class="md-code-block">\`\`\`${lang || ''}\n${code}\`\`\`</span>`;
+    });
+    
+    // Headers (must come before bold)
+    highlighted = highlighted.replace(/^(#{1,6})\s+(.+)$/gm, '<span class="md-header">$1 $2</span>');
+    
+    // Task lists (before regular lists)
+    highlighted = highlighted.replace(/^(\s*[-*+]\s+\[[ xX]\])\s+(.+)$/gm, '<span class="md-task">$1 $2</span>');
+    
+    // Lists
+    highlighted = highlighted.replace(/^(\s*[-*+])\s+(.+)$/gm, '<span class="md-list">$1 $2</span>');
+    highlighted = highlighted.replace(/^(\s*\d+\.)\s+(.+)$/gm, '<span class="md-list">$1 $2</span>');
+    
+    // Blockquotes
+    highlighted = highlighted.replace(/^(&gt;.+)$/gm, '<span class="md-blockquote">$1</span>');
+    
+    // Horizontal rules
+    highlighted = highlighted.replace(/^([-*_]{3,})$/gm, '<span class="md-hr">$1</span>');
+    
+    // Images (before links)
+    highlighted = highlighted.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<span class="md-image">![$1]($2)</span>');
+    
+    // Wiki links
+    highlighted = highlighted.replace(/\[\[([^\]]+)\]\]/g, '<span class="md-wiki-link">[[$1]]</span>');
+    
+    // Links
+    highlighted = highlighted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<span class="md-link">[$1]($2)</span>');
+    
+    // Inline code (before bold/italic to avoid conflicts)
+    highlighted = highlighted.replace(/`([^`]+)`/g, '<span class="md-code">`$1`</span>');
+    
+    // Bold (before italic)
+    highlighted = highlighted.replace(/\*\*(.+?)\*\*/g, '<span class="md-bold">**$1**</span>');
+    highlighted = highlighted.replace(/__(.+?)__/g, '<span class="md-bold">__$1__</span>');
+    
+    // Strikethrough
+    highlighted = highlighted.replace(/~~(.+?)~~/g, '<span class="md-strikethrough">~~$1~~</span>');
+    
+    // Italic (after bold to avoid conflicts)
+    highlighted = highlighted.replace(/(?<!\*)\*([^\*]+)\*(?!\*)/g, '<span class="md-italic">*$1*</span>');
+    highlighted = highlighted.replace(/(?<!_)_([^_]+)_(?!_)/g, '<span class="md-italic">_$1_</span>');
+    
+    return highlighted;
   }
 }
