@@ -1,0 +1,252 @@
+<div class="tasks-container">
+    <!-- Header -->
+    <div class="tasks-header">
+        <div class="header-content">
+            <h1 class="page-title">Tasks</h1>
+            <button (click)="openCreateModal()" class="btn-primary">
+                <app-icon name="plus" size="sm"></app-icon>
+                <span>New Task</span>
+            </button>
+        </div>
+
+        <!-- Search -->
+        <div class="search-bar">
+            <app-icon name="search" size="sm"></app-icon>
+            <input type="text" placeholder="Search tasks..." [value]="searchQuery()"
+                (input)="searchQuery.set($any($event.target).value); loadTasks()" class="search-input" />
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <div class="filter-group">
+            <span class="filter-label">Status:</span>
+            <div class="filter-chips">
+                @for (status of allStatuses; track status) {
+                <button (click)="toggleStatus(status)" [class.active]="selectedStatuses().includes(status)"
+                    class="filter-chip">
+                    {{ status }}
+                </button>
+                }
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <span class="filter-label">Priority:</span>
+            <div class="filter-chips">
+                @for (priority of allPriorities; track priority) {
+                <button (click)="togglePriority(priority)" [class.active]="selectedPriorities().includes(priority)"
+                    class="filter-chip" [class.priority-low]="priority === 'low'"
+                    [class.priority-medium]="priority === 'medium'" [class.priority-high]="priority === 'high'"
+                    [class.priority-urgent]="priority === 'urgent'">
+                    {{ priority }}
+                </button>
+                }
+            </div>
+        </div>
+
+        @if (availableTags().length > 0) {
+        <div class="filter-group">
+            <span class="filter-label">Tags:</span>
+            <div class="filter-chips">
+                @for (tag of availableTags(); track tag) {
+                <button (click)="toggleTag(tag)" [class.active]="selectedTags().includes(tag)" class="filter-chip">
+                    {{ tag }}
+                </button>
+                }
+            </div>
+        </div>
+        }
+
+        @if (selectedStatuses().length > 0 || selectedPriorities().length > 0 || selectedTags().length > 0 ||
+        searchQuery()) {
+        <button (click)="clearFilters()" class="btn-clear-filters">
+            Clear all filters
+        </button>
+        }
+    </div>
+
+    <!-- Task Grid -->
+    <div class="tasks-grid">
+        @if (filteredTasks().length === 0) {
+        <div class="empty-state">
+            <app-icon name="clipboard" size="lg"></app-icon>
+            <p>No tasks found</p>
+            <button (click)="openCreateModal()" class="btn-secondary">Create your first task</button>
+        </div>
+        } @else {
+        @for (task of filteredTasks(); track task.id) {
+        <div class="task-card" [class.overdue]="isOverdue(task)">
+            <!-- Priority Badge -->
+            <div class="task-header">
+                <span class="priority-badge" [ngClass]="getPriorityColor(task.priority)">
+                    {{ task.priority }}
+                </span>
+                <div class="task-actions">
+                    <button (click)="editTask(task)" class="btn-icon" title="Edit">
+                        <app-icon name="edit" size="sm"></app-icon>
+                    </button>
+                    <button (click)="deleteTask(task.id)" class="btn-icon btn-danger" title="Delete">
+                        <app-icon name="trash" size="sm"></app-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <h3 class="task-title">{{ task.title }}</h3>
+
+            <!-- Description -->
+            @if (task.description) {
+            <p class="task-description">{{ task.description }}</p>
+            }
+
+            <!-- Meta Info -->
+            <div class="task-meta">
+                <!-- Due Date -->
+                @if (task.dueDate) {
+                <div class="meta-item">
+                    <app-icon name="calendar" size="xs"></app-icon>
+                    <span [class.text-red-500]="isOverdue(task)">{{ formatDate(task.dueDate) }}</span>
+                </div>
+                }
+
+                <!-- Tags -->
+                @if (task.tags.length > 0) {
+                <div class="meta-item">
+                    <app-icon name="tag" size="xs"></app-icon>
+                    <div class="task-tags">
+                        @for (tag of task.tags; track tag) {
+                        <span class="task-tag">{{ tag }}</span>
+                        }
+                    </div>
+                </div>
+                }
+
+                <!-- Linked Note -->
+                @if (task.linkedNoteId) {
+                <div class="meta-item clickable" (click)="goToNote(task.linkedNoteId)">
+                    <app-icon name="document" size="xs"></app-icon>
+                    <span class="linked-note">{{ getNoteName(task.linkedNoteId) }}</span>
+                </div>
+                }
+            </div>
+
+            <!-- Status & Actions -->
+            <div class="task-footer">
+                <select [value]="task.status" (change)="updateTaskStatus(task, $any($event.target).value)"
+                    class="status-select">
+                    @for (status of allStatuses; track status) {
+                    <option [value]="status">{{ status }}</option>
+                    }
+                </select>
+
+                <select [value]="task.priority" (change)="updateTaskPriority(task, $any($event.target).value)"
+                    class="priority-select">
+                    @for (priority of allPriorities; track priority) {
+                    <option [value]="priority">{{ priority }}</option>
+                    }
+                </select>
+            </div>
+        </div>
+        }
+        }
+    </div>
+
+    <!-- Create/Edit Modal -->
+    @if (showCreateModal()) {
+    <div class="modal-backdrop" (click)="closeCreateModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>{{ editingTask() ? 'Edit Task' : 'New Task' }}</h2>
+                <button (click)="closeCreateModal()" class="btn-close">
+                    <app-icon name="x" size="sm"></app-icon>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Title -->
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" [(ngModel)]="newTask().title" placeholder="Task title..." class="form-input"
+                        autofocus />
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea [(ngModel)]="newTask().description" placeholder="Task description..." rows="4"
+                        class="form-input"></textarea>
+                </div>
+
+                <!-- Priority & Status -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select [(ngModel)]="newTask().priority" class="form-select">
+                            @for (priority of allPriorities; track priority) {
+                            <option [value]="priority">{{ priority }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select [(ngModel)]="newTask().status" class="form-select">
+                            @for (status of allStatuses; track status) {
+                            <option [value]="status">{{ status }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Due Date -->
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" [value]="newTask().dueDate ? newTask().dueDate!.toISOString().split('T')[0] : ''"
+                        (input)="onDueDateChange($event)" class="form-input" />
+                </div>
+
+                <!-- Linked Note -->
+                <div class="form-group">
+                    <label>Link to Note</label>
+                    <select [(ngModel)]="linkedNoteIdValue" class="form-select">
+                        <option [value]="null">No linked note</option>
+                        @for (note of notes(); track note.id) {
+                        <option [value]="note.id">{{ note.title }}</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Tags -->
+                <div class="form-group">
+                    <label>Tags</label>
+                    <div class="tags-input-container">
+                        <div class="tags-list">
+                            @for (tag of newTask().tags; track tag) {
+                            <span class="tag-pill">
+                                {{ tag }}
+                                <button (click)="removeTag(tag)" class="tag-remove">×</button>
+                            </span>
+                            }
+                        </div>
+                        <div class="tag-input-row">
+                            <input type="text" [(ngModel)]="tagInputValue"
+                                (keydown.enter)="addTag(); $event.preventDefault()" placeholder="Add tag..."
+                                class="form-input" />
+                            <button (click)="addTag()" type="button" class="btn-add-tag">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button (click)="closeCreateModal()" class="btn-secondary">Cancel</button>
+                <button (click)="editingTask() ? saveTask() : createTask()" [disabled]="!newTask().title.trim()"
+                    class="btn-primary">
+                    {{ editingTask() ? 'Save' : 'Create' }}
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+</div>
