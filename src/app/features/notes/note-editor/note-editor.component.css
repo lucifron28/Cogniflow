@@ -117,6 +117,19 @@
   padding-left: 0.5em;
 }
 
+/* Ensure bold and italic work inside list items */
+.markdown-preview li strong,
+.markdown-preview li b {
+  font-weight: 700 !important;
+  color: inherit;
+}
+
+.markdown-preview li em,
+.markdown-preview li i {
+  font-style: italic !important;
+  color: inherit;
+}
+
 /* Task list items (checkboxes) - remove bullets */
 .markdown-preview li:has(input[type="checkbox"]) {
   list-style: none;
@@ -288,13 +301,25 @@
 
 /* Strong/Bold text */
 .markdown-preview strong {
-  font-weight: 700;
+  font-weight: 700 !important;
+  color: var(--color-cyber-accent);
+}
+
+/* Also ensure <b> tags work */
+.markdown-preview b {
+  font-weight: 700 !important;
   color: var(--color-cyber-accent);
 }
 
 /* Emphasis/Italic text */
 .markdown-preview em {
-  font-style: italic;
+  font-style: italic !important;
+  color: rgba(0, 242, 254, 0.95);
+}
+
+/* Also ensure <i> tags work */
+.markdown-preview i {
+  font-style: italic !important;
   color: rgba(0, 242, 254, 0.95);
 }
 
