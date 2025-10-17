@@ -476,3 +476,98 @@
 .electric-sky .markdown-preview::-webkit-scrollbar-thumb:hover {
   background-color: rgba(8, 145, 178, 0.5);
 }
+
+/* Tags Section Styling */
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  max-height: 2rem;
+}
+
+.tag-chip.cyber-chip {
+  background-color: rgba(0, 242, 254, 0.15);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  color: #00f2fe;
+}
+
+.tag-chip.cyber-chip:hover {
+  background-color: rgba(0, 242, 254, 0.25);
+  border-color: rgba(0, 242, 254, 0.5);
+}
+
+.tag-chip.electric-chip {
+  background-color: rgba(8, 145, 178, 0.15);
+  border: 1px solid rgba(8, 145, 178, 0.3);
+  color: #0891b2;
+}
+
+.tag-chip.electric-chip:hover {
+  background-color: rgba(8, 145, 178, 0.25);
+  border-color: rgba(8, 145, 178, 0.5);
+}
+
+.remove-tag-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.125rem;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.2s;
+}
+
+.remove-tag-btn:hover {
+  opacity: 1;
+  background-color: rgba(239, 68, 68, 0.2);
+}
+
+.tag-input {
+  flex: 1;
+  min-width: 120px;
+  max-width: 200px;
+  padding: 0.375rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  outline: none;
+  background: transparent;
+  transition: all 0.2s;
+}
+
+.tag-input.cyber-input {
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  color: #00f2fe;
+}
+
+.tag-input.cyber-input::placeholder {
+  color: rgba(0, 242, 254, 0.4);
+}
+
+.tag-input.cyber-input:focus {
+  border-color: rgba(0, 242, 254, 0.6);
+  background-color: rgba(0, 242, 254, 0.05);
+  box-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
+}
+
+.tag-input.electric-input {
+  border: 1px solid rgba(8, 145, 178, 0.3);
+  color: #0891b2;
+}
+
+.tag-input.electric-input::placeholder {
+  color: rgba(8, 145, 178, 0.4);
+}
+
+.tag-input.electric-input:focus {
+  border-color: rgba(8, 145, 178, 0.6);
+  background-color: rgba(8, 145, 178, 0.05);
+  box-shadow: 0 0 8px rgba(8, 145, 178, 0.3);
+}
