@@ -1,0 +1,172 @@
+/* Panel slide animation */
+:host {
+  display: block;
+}
+
+.transform {
+  will-change: transform;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 242, 254, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 242, 254, 0.5);
+}
+
+/* Chat scrolling */
+#chatContainer {
+  scroll-behavior: smooth;
+}
+
+/* Markdown preview in chat messages - reuse existing styles with adjustments */
+.markdown-preview {
+  color: #d1d5db;
+  line-height: 1.6;
+  font-size: 0.875rem;
+}
+
+/* Override padding for chat context - remove side padding */
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6,
+.markdown-preview p,
+.markdown-preview blockquote {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Smaller heading sizes for chat */
+.markdown-preview h1 {
+  font-size: 1.25em;
+  margin: 0.5em 0 0.3em;
+  padding-bottom: 0.2em !important;
+}
+
+.markdown-preview h2 {
+  font-size: 1.125em;
+  margin: 0.5em 0 0.3em;
+  padding-bottom: 0.2em !important;
+}
+
+.markdown-preview h3 {
+  font-size: 1em;
+  margin: 0.5em 0 0.3em;
+}
+
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+  font-size: 0.875em;
+  margin: 0.5em 0 0.3em;
+}
+
+.markdown-preview p {
+  margin: 0.5em 0;
+}
+
+/* Lists - reduce padding */
+.markdown-preview ul,
+.markdown-preview ol {
+  margin: 0.5em 0;
+  padding-left: 1.5rem !important;
+}
+
+.markdown-preview li {
+  margin: 0.25em 0;
+}
+
+/* Code blocks - reduce margins */
+.markdown-preview pre {
+  margin: 0.75em 0 !important;
+  padding: 0.75rem !important;
+  font-size: 0.8125em;
+}
+
+.markdown-preview code {
+  font-size: 0.8125em;
+}
+
+/* Blockquotes - reduce margins */
+.markdown-preview blockquote {
+  margin: 0.75em 0 !important;
+  padding-left: 1em !important;
+}
+
+.markdown-preview hr {
+  margin: 1em 0 !important;
+}
+
+/* Resize cursor */
+.cursor-col-resize {
+  cursor: col-resize !important;
+}
+
+/* Ensure bold, italic, and other inline formatting is properly styled */
+:host ::ng-deep .markdown-preview strong,
+:host ::ng-deep .markdown-preview b {
+  font-weight: 700 !important;
+  color: inherit;
+}
+
+:host ::ng-deep .markdown-preview em,
+:host ::ng-deep .markdown-preview i {
+  font-style: italic !important;
+  color: inherit;
+}
+
+/* Interactive Quiz Buttons */
+:host ::ng-deep .show-answer-btn {
+  background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-block;
+  margin: 0.5rem 0;
+}
+
+:host ::ng-deep .show-answer-btn:hover {
+  background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(34, 211, 238, 0.4);
+}
+
+:host ::ng-deep .quiz-answer {
+  background-color: rgba(34, 211, 238, 0.15);
+  border-left: 4px solid #22d3ee;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  margin: 0.5rem 0;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
