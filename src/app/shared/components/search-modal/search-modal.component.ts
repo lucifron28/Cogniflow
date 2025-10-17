@@ -1,48 +1,59 @@
-import { Component, signal, computed, HostListener, inject } from '@angular/core';
+import { Component, signal, computed, HostListener, inject, effect, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../../core/services/theme.service';
+import { IconComponent, IconName } from '../icon/icon.component';
+import { NotesService } from '../../../services/notes.service';
+import { Note } from '../../../core/models/note.model';
+import Fuse from 'fuse.js';
 
 interface SearchResult {
   type: 'note' | 'task' | 'tag';
   id: string;
   title: string;
   preview?: string;
-  icon: string;
+  icon: IconName;
+  score?: number;
 }
 
 @Component({
   selector: 'app-search-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IconComponent],
   templateUrl: './search-modal.component.html',
   styleUrl: './search-modal.component.css'
 })
 export class SearchModalComponent {
   themeService = inject(ThemeService);
+  private notesService = inject(NotesService);
+  
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   
   isOpen = signal(false);
   searchQuery = signal('');
   selectedIndex = signal(0);
   
-  // Mock results - will be replaced with actual search
+  // All notes for searching
+  private allNotes = signal<Note[]>([]);
+  
+  // Fuse.js instance
+  private fuse: Fuse<SearchResult> | null = null;
+  
+  // Search results using Fuse.js
   results = computed<SearchResult[]>(() => {
-    const query = this.searchQuery().toLowerCase();
+    const query = this.searchQuery().trim();
     if (!query) return [];
     
-    // TODO: Replace with actual fuzzy search using fuse.js
-    const mockResults: SearchResult[] = [
-      { type: 'note', id: '1', title: 'Meeting Notes', preview: 'Discussion about project timeline...', icon: '📝' },
-      { type: 'note', id: '2', title: 'Ideas', preview: 'New feature concepts...', icon: '💡' },
-      { type: 'task', id: '1', title: 'Review PR #123', preview: 'High priority', icon: '✅' },
-      { type: 'tag', id: 'work', title: '#work', preview: '12 notes', icon: '🏷️' },
-    ];
+    if (!this.fuse) return [];
     
-    return mockResults.filter(r => 
-      r.title.toLowerCase().includes(query) || 
-      r.preview?.toLowerCase().includes(query)
-    );
+    // Perform fuzzy search
+    const fuseResults = this.fuse.search(query, { limit: 10 });
+    
+    return fuseResults.map(result => ({
+      ...result.item,
+      score: result.score
+    }));
   });
 
   constructor(private router: Router) {
@@ -52,6 +63,96 @@ export class SearchModalComponent {
         this.open();
       });
     }
+    
+    // Subscribe to notes and build search index
+    this.notesService.getNotes().subscribe(notes => {
+      this.allNotes.set(notes);
+      this.buildSearchIndex(notes);
+    });
+  }
+  
+  private buildSearchIndex(notes: Note[]): void {
+    // Convert notes to searchable results
+    const searchableItems: SearchResult[] = [];
+    
+    // Add notes
+    notes.forEach(note => {
+      searchableItems.push({
+        type: 'note',
+        id: note.id!,
+        title: note.title,
+        preview: this.truncateContent(note.content, 60),
+        icon: 'document'
+      });
+    });
+    
+    // Add tasks (extract from notes)
+    notes.forEach(note => {
+      const tasks = this.extractTasks(note.content);
+      tasks.forEach((task, index) => {
+        searchableItems.push({
+          type: 'task',
+          id: `${note.id}-task-${index}`,
+          title: task.text,
+          preview: `In: ${note.title}`,
+          icon: task.completed ? 'task-completed' : 'task'
+        });
+      });
+    });
+    
+    // Add tags
+    const tagsMap = new Map<string, number>();
+    notes.forEach(note => {
+      note.tags.forEach(tag => {
+        tagsMap.set(tag, (tagsMap.get(tag) || 0) + 1);
+      });
+    });
+    
+    tagsMap.forEach((count, tag) => {
+      searchableItems.push({
+        type: 'tag',
+        id: tag,
+        title: `#${tag}`,
+        preview: `${count} note${count !== 1 ? 's' : ''}`,
+        icon: 'tag'
+      });
+    });
+    
+    // Configure Fuse.js
+    this.fuse = new Fuse(searchableItems, {
+      keys: [
+        { name: 'title', weight: 0.7 },
+        { name: 'preview', weight: 0.3 }
+      ],
+      threshold: 0.4, // 0 = perfect match, 1 = match anything
+      includeScore: true,
+      minMatchCharLength: 2,
+      ignoreLocation: true
+    });
+  }
+  
+  private truncateContent(content: string, maxLength: number): string {
+    const trimmed = content.trim().replace(/\n/g, ' ');
+    if (trimmed.length <= maxLength) return trimmed;
+    return trimmed.substring(0, maxLength) + '...';
+  }
+  
+  private extractTasks(content: string): Array<{ text: string; completed: boolean }> {
+    const tasks: Array<{ text: string; completed: boolean }> = [];
+    const lines = content.split('\n');
+    
+    lines.forEach(line => {
+      const uncheckedMatch = line.match(/^- \[ \] (.+)/);
+      const checkedMatch = line.match(/^- \[x\] (.+)/i);
+      
+      if (uncheckedMatch) {
+        tasks.push({ text: uncheckedMatch[1], completed: false });
+      } else if (checkedMatch) {
+        tasks.push({ text: checkedMatch[1], completed: true });
+      }
+    });
+    
+    return tasks;
   }
 
   // Cmd+K / Ctrl+K to open
@@ -94,6 +195,10 @@ export class SearchModalComponent {
     if (this.isOpen()) {
       this.searchQuery.set('');
       this.selectedIndex.set(0);
+      // Focus the input after the DOM updates
+      setTimeout(() => {
+        this.searchInput?.nativeElement?.focus();
+      });
     }
   }
 
@@ -101,6 +206,10 @@ export class SearchModalComponent {
     this.isOpen.set(true);
     this.searchQuery.set('');
     this.selectedIndex.set(0);
+    // Focus the input after the DOM updates
+    setTimeout(() => {
+      this.searchInput?.nativeElement?.focus();
+    });
   }
 
   close() {
@@ -116,7 +225,9 @@ export class SearchModalComponent {
         this.router.navigate(['/notes', result.id]);
         break;
       case 'task':
-        this.router.navigate(['/tasks'], { queryParams: { id: result.id } });
+        // Extract note ID from task ID (format: noteId-task-index)
+        const noteId = result.id.split('-task-')[0];
+        this.router.navigate(['/notes', noteId]);
         break;
       case 'tag':
         this.router.navigate(['/notes'], { queryParams: { tag: result.id } });
