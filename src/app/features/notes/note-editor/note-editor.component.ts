@@ -1,4 +1,4 @@
-import { Component, signal, computed, effect, inject, OnInit, ElementRef, ViewEncapsulation } from '@angular/core';
+import { Component, signal, computed, effect, inject, OnInit, ElementRef, ViewEncapsulation, ViewChild, AfterViewChecked, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -28,12 +28,15 @@ type EditorView = 'split' | 'editor' | 'preview';
   styleUrl: './note-editor.component.css',
   encapsulation: ViewEncapsulation.None
 })
-export class NoteEditorComponent implements OnInit {
+export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy {
+  @ViewChild('markdownPreview') previewRef!: ElementRef<HTMLDivElement>;
+  
   private route = inject(ActivatedRoute);
   themeService = inject(ThemeService);
   private router = inject(Router);
   private elementRef = inject(ElementRef);
   private notesService = inject(NotesService);
+  private sanitizer = inject(DomSanitizer);
 
   noteId = signal<string | null>(null);
   title = signal('');
@@ -44,6 +47,13 @@ export class NoteEditorComponent implements OnInit {
   isLoading = signal(false);
   lastSaved = signal<Date | null>(null);
   errorMessage = signal<string | null>(null);
+  
+  // Store all notes for link resolution
+  allNotes = signal<Note[]>([]);
+  
+  // Track event listeners for cleanup
+  private clickListeners = new Map<Element, EventListener>();
+  private shouldAttachListeners = false;
 
   isNewNote = computed(() => !this.noteId());
   wordCount = computed(() => {
@@ -54,15 +64,52 @@ export class NoteEditorComponent implements OnInit {
   
   processedContent = computed(() => {
     let processed = this.content();
+    const notes = this.allNotes();
     
+    // Replace [[Note Name]] or [[/path/to/note]] with clickable HTML links
     processed = processed.replace(/\[\[([^\]]+)\]\]/g, (match, noteName) => {
-      return `[${noteName}](#note:${noteName.replace(/\s+/g, '-').toLowerCase()})`;
+      const trimmedName = noteName.trim();
+      let targetNote: Note | undefined;
+      
+      // Check if it's a path-based link (starts with /)
+      if (trimmedName.startsWith('/')) {
+        // For path-based links, we'll mark them specially and resolve them on click
+        // For now, show as valid link (we'll resolve on click)
+        return `<a href="javascript:void(0)" 
+                   class="wiki-link wiki-link-path" 
+                   data-note-path="${trimmedName}"
+                   data-note-title="${trimmedName}">
+                  ${trimmedName}
+                </a>`;
+      } else {
+        // Title-based link - find by title
+        targetNote = notes.find(n => 
+          n.title.toLowerCase() === trimmedName.toLowerCase()
+        );
+      }
+      
+      if (targetNote && targetNote.id) {
+        // Note exists - create clickable link
+        return `<a href="javascript:void(0)" 
+                   class="wiki-link" 
+                   data-note-id="${targetNote.id}"
+                   data-note-title="${trimmedName}">
+                  ${trimmedName}
+                </a>`;
+      } else if (!trimmedName.startsWith('/')) {
+        // Note doesn't exist and it's not a path - show as broken link
+        return `<span class="wiki-link-broken" 
+                      title="Note not found: ${trimmedName}">
+                  ${trimmedName}
+                </span>`;
+      }
+      
+      // Fallback
+      return match;
     });
     
     return processed;
   });
-
-  private sanitizer = inject(DomSanitizer);
   
   constructor() {
     const renderer = new marked.Renderer();
@@ -92,6 +139,12 @@ export class NoteEditorComponent implements OnInit {
         this.highlightCode();
         this.attachCheckboxListeners();
       }, 0);
+    });
+    
+    // Trigger listener attachment when content or notes change
+    effect(() => {
+      this.processedContent();
+      this.shouldAttachListeners = true;
     });
   }
   
@@ -139,6 +192,11 @@ export class NoteEditorComponent implements OnInit {
   });
 
   ngOnInit() {
+    // Load all notes for link resolution
+    this.notesService.getNotes().subscribe(notes => {
+      this.allNotes.set(notes);
+    });
+    
     this.route.params.subscribe(params => {
       if (params['id'] && params['id'] !== 'new') {
         this.noteId.set(params['id']);
@@ -151,6 +209,89 @@ export class NoteEditorComponent implements OnInit {
         this.tags.set([]);
       }
     });
+  }
+  
+  ngAfterViewChecked() {
+    // Attach wiki link listeners after view updates
+    if (this.shouldAttachListeners && this.previewRef) {
+      this.attachWikiLinkListeners();
+      this.shouldAttachListeners = false;
+    }
+  }
+  
+  ngOnDestroy() {
+    // Clean up all event listeners
+    this.removeAllListeners();
+  }
+  
+  private attachWikiLinkListeners() {
+    if (!this.previewRef?.nativeElement) return;
+    
+    // Remove old listeners first
+    this.removeAllListeners();
+    
+    // Find all wiki links
+    const links = this.previewRef.nativeElement.querySelectorAll('.wiki-link');
+    
+    links.forEach(link => {
+      const handler = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const noteId = (e.currentTarget as HTMLElement).getAttribute('data-note-id');
+        const notePath = (e.currentTarget as HTMLElement).getAttribute('data-note-path');
+        const noteTitle = (e.currentTarget as HTMLElement).getAttribute('data-note-title');
+        
+        if (noteId) {
+          this.navigateToNote(noteId);
+        } else if (notePath) {
+          this.navigateToNoteByPath(notePath);
+        } else if (noteTitle) {
+          // Note doesn't exist - could offer to create it
+          console.log('Note not found:', noteTitle);
+        }
+      };
+      
+      link.addEventListener('click', handler);
+      this.clickListeners.set(link, handler);
+    });
+  }
+  
+  private removeAllListeners() {
+    this.clickListeners.forEach((handler, element) => {
+      element.removeEventListener('click', handler as EventListener);
+    });
+    this.clickListeners.clear();
+  }
+  
+  navigateToNote(noteId: string) {
+    // Save current note before navigating
+    if (!this.isNewNote() && this.content()) {
+      this.saveNote();
+    }
+    this.router.navigate(['/notes', noteId]);
+  }
+
+  async navigateToNoteByPath(path: string) {
+    // Save current note before navigating
+    if (!this.isNewNote() && this.content()) {
+      await this.saveNote();
+    }
+    
+    // Look up note by path
+    try {
+      const note = await this.notesService.getNoteByPath(path);
+      if (note && note.id) {
+        this.router.navigate(['/notes', note.id]);
+      } else {
+        console.warn(`Note not found for path: ${path}`);
+        this.errorMessage.set(`Note not found: ${path}`);
+        setTimeout(() => this.errorMessage.set(null), 3000);
+      }
+    } catch (error) {
+      console.error('Error navigating to note by path:', error);
+      this.errorMessage.set('Failed to navigate to note');
+      setTimeout(() => this.errorMessage.set(null), 3000);
+    }
   }
 
   private highlightCode() {
@@ -204,6 +345,7 @@ export class NoteEditorComponent implements OnInit {
     try {
       const noteData = {
         title: this.title() || 'Untitled',
+        slug: this.notesService.generateSlug(this.title() || 'Untitled'), // Generate slug from title
         content: this.content(),
         tags: this.tags(),
         linkedNotes: this.detectedBacklinks()
@@ -291,23 +433,6 @@ export class NoteEditorComponent implements OnInit {
         this.toggleCheckbox(checkbox);
       });
     });
-  }
-
-  handlePreviewClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    
-    if (target.tagName === 'A') {
-      const href = (target as HTMLAnchorElement).href;
-      
-      if (href.includes('#note:')) {
-        event.preventDefault();
-        const noteName = target.textContent || '';
-        console.log('Navigate to note:', noteName);
-        // TODO: Implement actual navigation to linked note
-        // For now, show an alert
-        alert(`Would navigate to: ${noteName}\n\n(Navigation will be implemented when notes are stored in Firebase)`);
-      }
-    }
   }
 
   toggleCheckbox(checkbox: HTMLInputElement) {
