@@ -1,3 +1,44 @@
+/* View Toggle Buttons */
+.view-toggle-group {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.view-toggle-btn {
+  background-color: rgba(26, 37, 37, 0.8);
+  border-color: var(--color-cyber-accent);
+  color: var(--color-cyber-accent);
+  opacity: 0.5;
+}
+
+.view-toggle-btn:hover {
+  opacity: 0.8;
+  background-color: rgba(0, 242, 254, 0.1);
+}
+
+.view-toggle-btn.active {
+  opacity: 1;
+  background-color: rgba(0, 242, 254, 0.2);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+}
+
+:host-context(.electric-sky) .view-toggle-btn {
+  background-color: #ffffff;
+  border-color: var(--color-electric-light-gray);
+  color: #1f2937;
+}
+
+:host-context(.electric-sky) .view-toggle-btn:hover {
+  background-color: rgba(0, 212, 255, 0.1);
+  border-color: var(--color-electric-cyan);
+}
+
+:host-context(.electric-sky) .view-toggle-btn.active {
+  background-color: rgba(0, 212, 255, 0.2);
+  border-color: var(--color-electric-cyan);
+  color: var(--color-electric-cyan);
+}
+
 /* Sort Select */
 .sort-select {
   background-color: rgba(26, 37, 37, 0.8);
