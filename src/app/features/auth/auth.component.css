@@ -1,0 +1,50 @@
+/* Auth Logo Styling */
+.logo-bracket {
+  color: var(--color-cyber-accent);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0 20px var(--color-cyber-accent);
+}
+
+.logo-brain-auth {
+  color: var(--color-cyber-accent);
+  filter: drop-shadow(0 0 15px var(--color-cyber-accent));
+  animation: pulse-glow-auth 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow-auth {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px var(--color-cyber-accent));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 25px var(--color-cyber-accent));
+    transform: scale(1.05);
+  }
+}
+
+/* Light theme */
+:host-context(.electric-sky) .logo-bracket {
+  color: var(--color-electric-cyan) !important;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.6) !important;
+}
+
+:host-context(.electric-sky) .logo-brain-auth {
+  color: var(--color-electric-cyan) !important;
+  filter: drop-shadow(0 0 15px var(--color-electric-cyan)) !important;
+}
+
+@keyframes pulse-glow-auth-light {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px var(--color-electric-cyan));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 25px var(--color-electric-cyan));
+    transform: scale(1.05);
+  }
+}
+
+:host-context(.electric-sky) .logo-brain-auth {
+  animation: pulse-glow-auth-light 3s ease-in-out infinite;
+}
