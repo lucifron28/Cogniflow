@@ -348,9 +348,12 @@ export class NotesService implements OnDestroy {
         notes.map((n) => ({
           id: n.id!,
           title: n.title,
+          slug: n.slug,
           tags: n.tags,
           wordCount: n.content.trim().split(/\s+/).length,
           linkedNotesCount: n.linkedNotes.length,
+          contentPreview: this.generateContentPreview(n.content),
+          folderId: n.folderId,
           createdAt: n.createdAt,
           updatedAt: n.updatedAt,
           isPinned: n.isPinned,
@@ -399,6 +402,31 @@ export class NotesService implements OnDestroy {
       .replace(/\s+/g, '-')      // Replace spaces with hyphens
       .replace(/-+/g, '-')       // Replace multiple hyphens with single hyphen
       .replace(/^-+|-+$/g, '');  // Trim hyphens from start/end
+  }
+
+  generateContentPreview(content: string, maxLength: number = 150): string {
+    if (!content || content.trim().length === 0) {
+      return '';
+    }
+
+    // Remove markdown syntax for cleaner preview
+    let preview = content
+      .replace(/#{1,6}\s/g, '')        // Remove headers
+      .replace(/\*\*(.+?)\*\*/g, '$1') // Remove bold
+      .replace(/\*(.+?)\*/g, '$1')     // Remove italic
+      .replace(/\[(.+?)\]\(.+?\)/g, '$1') // Remove links, keep text
+      .replace(/`{1,3}(.+?)`{1,3}/g, '$1') // Remove code blocks
+      .replace(/[-*+]\s/g, '')         // Remove list markers
+      .replace(/>\s/g, '')             // Remove blockquotes
+      .replace(/\n+/g, ' ')            // Replace newlines with spaces
+      .trim();
+
+    // Truncate to max length
+    if (preview.length > maxLength) {
+      preview = preview.substring(0, maxLength).trim() + '...';
+    }
+
+    return preview;
   }
 
   async buildNotePath(note: Note, folders?: Folder[]): Promise<string> {
