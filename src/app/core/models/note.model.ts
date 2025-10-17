@@ -2,6 +2,7 @@ export interface Note {
   id?: string;
   userId: string;
   title: string;
+  slug?: string;
   content: string;
   tags: string[];
   linkedNotes: string[];
@@ -15,6 +16,7 @@ export interface Note {
 export interface NoteMetadata {
   id: string;
   title: string;
+  slug?: string;
   tags: string[];
   wordCount: number;
   linkedNotesCount: number;
