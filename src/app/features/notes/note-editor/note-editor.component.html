@@ -110,6 +110,34 @@
                     <span class="text-xs opacity-60">Saved {{ lastSaved()!.toLocaleTimeString() }}</span>
                     }
 
+                    <!-- AI Assistant Button -->
+                    <button (click)="toggleAIPanel()"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg border text-sm transition-all cursor-pointer"
+                        [class.bg-cyber-accent/10]="!showAIPanel() && themeService.theme() === 'cyber-glow'"
+                        [class.border-cyber-accent]="!showAIPanel() && themeService.theme() === 'cyber-glow'"
+                        [class.text-cyber-accent]="!showAIPanel() && themeService.theme() === 'cyber-glow'"
+                        [class.hover:bg-cyber-accent/20]="!showAIPanel() && themeService.theme() === 'cyber-glow'"
+                        [class.bg-cyber-accent]="showAIPanel() && themeService.theme() === 'cyber-glow'"
+                        [class.text-cyber-black]="showAIPanel() && themeService.theme() === 'cyber-glow'"
+                        [class.bg-electric-accent/10]="!showAIPanel() && themeService.theme() === 'electric-sky'"
+                        [class.border-electric-accent]="!showAIPanel() && themeService.theme() === 'electric-sky'"
+                        [class.text-electric-accent]="!showAIPanel() && themeService.theme() === 'electric-sky'"
+                        [class.hover:bg-electric-accent/20]="!showAIPanel() && themeService.theme() === 'electric-sky'"
+                        [class.bg-electric-accent]="showAIPanel() && themeService.theme() === 'electric-sky'"
+                        [class.text-electric-dark-blue]="showAIPanel() && themeService.theme() === 'electric-sky'"
+                        title="AI Assistant (Ctrl+L)">
+                        <!-- Robot Icon SVG -->
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="8" width="16" height="12" rx="2" />
+                            <path d="M9 12h.01" />
+                            <path d="M15 12h.01" />
+                            <path d="M9 16h6" />
+                            <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
+                        Lucid
+                    </button>
+
                     @if (!isNewNote()) {
                     <button (click)="deleteNote()" [disabled]="isSaving()"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg border text-sm transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
@@ -287,3 +315,10 @@
         }
     </div>
 </div>
+
+<!-- AI Panel Overlay -->
+@if (showAIPanel()) {
+<app-ai-panel [noteContent]="content()" [noteTitle]="title()" [selectedText]="selectedText()" (close)="closeAIPanel()"
+    (tagsGenerated)="onTagsGenerated($event)">
+</app-ai-panel>
+}

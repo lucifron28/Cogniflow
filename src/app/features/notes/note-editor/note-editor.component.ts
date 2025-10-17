@@ -16,6 +16,7 @@ import 'prismjs/components/prism-bash';
 import { NotesService } from '../../../services/notes.service';
 import { Note } from '../../../core/models/note.model';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
+import { AiPanelComponent } from '../../../shared/components/ai-panel/ai-panel.component';
 import { ThemeService } from '../../../core/services/theme.service';
 
 type EditorView = 'split' | 'editor' | 'preview';
@@ -23,7 +24,7 @@ type EditorView = 'split' | 'editor' | 'preview';
 @Component({
   selector: 'app-note-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule, IconComponent],
+  imports: [CommonModule, FormsModule, IconComponent, AiPanelComponent],
   templateUrl: './note-editor.component.html',
   styleUrl: './note-editor.component.css',
   encapsulation: ViewEncapsulation.None
@@ -52,6 +53,10 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
   
   // Store all notes for link resolution
   allNotes = signal<Note[]>([]);
+  
+  // AI Panel state
+  showAIPanel = signal(false);
+  selectedText = signal<string>('');
   
   // Track event listeners for cleanup
   private clickListeners = new Map<Element, EventListener>();
@@ -451,6 +456,28 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
     }
   }
 
+  // AI Panel methods
+  toggleAIPanel() {
+    // Get selected text from textarea
+    if (this.editorTextareaRef) {
+      const textarea = this.editorTextareaRef.nativeElement;
+      const selection = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+      this.selectedText.set(selection);
+    }
+    this.showAIPanel.set(!this.showAIPanel());
+  }
+
+  closeAIPanel() {
+    this.showAIPanel.set(false);
+  }
+
+  onTagsGenerated(tags: string[]) {
+    // Add generated tags to the note
+    const existingTags = this.tags();
+    const newTags = tags.filter(tag => !existingTags.includes(tag));
+    this.tags.set([...existingTags, ...newTags]);
+  }
+
   // Keyboard shortcuts
   handleKeyDown(event: KeyboardEvent) {
     // Cmd/Ctrl + S to save
@@ -463,6 +490,12 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
     if ((event.metaKey || event.ctrlKey) && event.key === 'e') {
       event.preventDefault();
       this.cycleView();
+    }
+
+    // Cmd/Ctrl + L to toggle AI panel
+    if ((event.metaKey || event.ctrlKey) && event.key === 'l') {
+      event.preventDefault();
+      this.toggleAIPanel();
     }
   }
 
