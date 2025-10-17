@@ -4,7 +4,18 @@
     <!-- Sidebar Header -->
     <div class="sidebar-header p-4 flex items-center justify-between">
         @if (!isCollapsed()) {
-        <h2 class="text-xl font-bold text-glow">Cogniflow</h2>
+        <div class="logo-container flex items-center gap-1">
+            <span class="logo-bracket text-2xl font-bold text-glow">[</span>
+            <app-icon name="brain" size="lg" customClass="logo-brain"></app-icon>
+            <span class="logo-bracket text-2xl font-bold text-glow">]</span>
+            <h2 class="text-xl font-bold text-glow ml-2">Cogniflow</h2>
+        </div>
+        } @else {
+        <div class="logo-collapsed">
+            <span class="logo-bracket-small text-lg font-bold text-glow">[</span>
+            <app-icon name="brain" size="sm" customClass="logo-brain"></app-icon>
+            <span class="logo-bracket-small text-lg font-bold text-glow">]</span>
+        </div>
         }
         <button (click)="toggleSidebar()"
             class="hover-bg p-2 rounded hover:bg-opacity-10 transition-all cursor-pointer">
