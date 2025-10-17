@@ -38,7 +38,7 @@
     </div>
 
     <!-- Sidebar Content -->
-    <div class="sidebar-content flex-1 overflow-y-auto p-4 space-y-4">
+    <div class="sidebar-content flex-1 overflow-y-auto p-4">
 
         <!-- Files & Folders Section -->
         <div class="sidebar-section">
@@ -59,85 +59,26 @@
             </div>
             }
         </div>
+    </div>
 
-        <!-- Recent Notes Section -->
-        <div class="sidebar-section">
-            <button (click)="toggleSection('recent')"
-                class="w-full flex items-center justify-between mb-2 opacity-80 hover:opacity-100 transition-opacity">
-                <div class="flex items-center gap-2">
-                    @if (showRecent()) {
-                    <app-icon name="chevron-down" size="md"></app-icon>
-                    } @else {
-                    <app-icon name="chevron-right" size="md"></app-icon>
-                    }
-                    <span class="text-sm font-semibold">Recent</span>
-                </div>
-            </button>
-            @if (showRecent()) {
-            <div class="pl-4 space-y-1">
-                <p class="text-sm opacity-50">Recent notes coming soon...</p>
-            </div>
-            }
-        </div>
-
-        <!-- Tags Section -->
-        <div class="sidebar-section">
-            <button (click)="toggleSection('tags')"
-                class="w-full flex items-center justify-between mb-2 opacity-80 hover:opacity-100 transition-opacity">
-                <div class="flex items-center gap-2">
-                    @if (showTags()) {
-                    <app-icon name="chevron-down" size="md"></app-icon>
-                    } @else {
-                    <app-icon name="chevron-right" size="md"></app-icon>
-                    }
-                    <span class="text-sm font-semibold">Tags</span>
-                </div>
-            </button>
-            @if (showTags()) {
-            <div class="pl-4 space-y-1">
-                <p class="text-sm opacity-50">Tags coming soon...</p>
-            </div>
-            }
-        </div>
-
-        <!-- Tasks Preview Section -->
-        <div class="sidebar-section">
-            <button (click)="toggleSection('tasks')"
-                class="w-full flex items-center justify-between mb-2 opacity-80 hover:opacity-100 transition-opacity">
-                <div class="flex items-center gap-2">
-                    @if (showTasks()) {
-                    <app-icon name="chevron-down" size="md"></app-icon>
-                    } @else {
-                    <app-icon name="chevron-right" size="md"></app-icon>
-                    }
-                    <span class="text-sm font-semibold">Tasks</span>
-                </div>
-            </button>
-            @if (showTasks()) {
-            <div class="pl-4 space-y-1">
-                <p class="text-sm opacity-50">Task preview coming soon...</p>
-            </div>
-            }
-        </div>
-
-        <!-- Navigation Links -->
-        <div class="nav-section-border pt-4">
-            <a routerLink="/notes" routerLinkActive="bg-opacity-20"
-                class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all mb-2">
-                <app-icon name="file" size="lg"></app-icon>
-                <span class="text-sm">All Notes</span>
-            </a>
-            <a routerLink="/tasks" routerLinkActive="bg-opacity-20"
-                class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all mb-2">
-                <app-icon name="task" size="lg"></app-icon>
-                <span class="text-sm">Tasks</span>
-            </a>
-            <a routerLink="/analytics" routerLinkActive="bg-opacity-20"
-                class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all">
-                <app-icon name="analytics" size="lg"></app-icon>
-                <span class="text-sm">Analytics</span>
-            </a>
-        </div>
+    <!-- Navigation Links (anchored to bottom) -->
+    <div class="nav-section-border p-4 border-t" [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
+        [class.border-electric-accent/20]="themeService.theme() === 'electric-sky'">
+        <a routerLink="/notes" routerLinkActive="bg-opacity-20"
+            class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all mb-2">
+            <app-icon name="file" size="lg"></app-icon>
+            <span class="text-sm">All Notes</span>
+        </a>
+        <a routerLink="/tasks" routerLinkActive="bg-opacity-20"
+            class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all mb-2">
+            <app-icon name="task" size="lg"></app-icon>
+            <span class="text-sm">Tasks</span>
+        </a>
+        <a routerLink="/analytics" routerLinkActive="bg-opacity-20"
+            class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all">
+            <app-icon name="analytics" size="lg"></app-icon>
+            <span class="text-sm">Analytics</span>
+        </a>
     </div>
 
     <!-- Sidebar Footer -->

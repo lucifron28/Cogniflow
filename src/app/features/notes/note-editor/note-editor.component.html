@@ -286,30 +286,4 @@
         </div>
         }
     </div>
-
-    <!-- Sidebar Info Panel -->
-    @if (detectedBacklinks().length > 0) {
-    <div class="w-64 border-l overflow-y-auto" [class.bg-cyber-darker]="themeService.theme() === 'cyber-glow'"
-        [class.bg-electric-light]="themeService.theme() === 'electric-sky'"
-        [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
-        [class.border-electric-accent/20]="themeService.theme() === 'electric-sky'">
-        <div class="p-4" [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
-            [class.border-electric-accent/20]="themeService.theme() === 'electric-sky'">
-            <h3 class="text-sm font-semibold mb-3" [class.text-cyber-accent]="themeService.theme() === 'cyber-glow'"
-                [class.text-electric-accent]="themeService.theme() === 'electric-sky'">Linked Notes</h3>
-            <ul class="space-y-2">
-                @for (link of detectedBacklinks(); track link) {
-                <li class="flex items-center gap-2 text-sm cursor-pointer p-2 rounded transition-colors"
-                    [class.text-cyber-text/70]="themeService.theme() === 'cyber-glow'"
-                    [class.text-electric-text/70]="themeService.theme() === 'electric-sky'"
-                    [class.hover:bg-cyber-accent/10]="themeService.theme() === 'cyber-glow'"
-                    [class.hover:bg-electric-accent/10]="themeService.theme() === 'electric-sky'">
-                    <app-icon name="link" size="xs" customClass="w-3 h-3"></app-icon>
-                    {{ link }}
-                </li>
-                }
-            </ul>
-        </div>
-    </div>
-    }
 </div>
