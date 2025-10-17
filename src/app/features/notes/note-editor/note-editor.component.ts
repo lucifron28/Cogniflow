@@ -44,21 +44,18 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
   title = signal('');
   content = signal('');
   tags = signal<string[]>([]);
-  currentTag = ''; // For tag input field
+  currentTag = '';
   editorView = signal<EditorView>('split');
   isSaving = signal(false);
   isLoading = signal(false);
   lastSaved = signal<Date | null>(null);
   errorMessage = signal<string | null>(null);
   
-  // Store all notes for link resolution
   allNotes = signal<Note[]>([]);
   
-  // AI Panel state
   showAIPanel = signal(false);
   selectedText = signal<string>('');
   
-  // Track event listeners for cleanup
   private clickListeners = new Map<Element, EventListener>();
   private shouldAttachListeners = false;
 
@@ -69,7 +66,6 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
   });
   charCount = computed(() => this.content().length);
   
-  // Syntax highlighting for markdown editor
   highlightedContent = computed<SafeHtml>(() => {
     const text = this.content();
     const highlighted = this.highlightMarkdown(text);
@@ -77,59 +73,28 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
   });
   
   processedContent = computed(() => {
-    let processed = this.content();
-    const notes = this.allNotes();
-    
-    // Replace [[Note Name]] or [[/path/to/note]] with clickable HTML links
-    processed = processed.replace(/\[\[([^\]]+)\]\]/g, (match, noteName) => {
-      const trimmedName = noteName.trim();
-      let targetNote: Note | undefined;
-      
-      // Check if it's a path-based link (starts with /)
-      if (trimmedName.startsWith('/')) {
-        // For path-based links, we'll mark them specially and resolve them on click
-        // For now, show as valid link (we'll resolve on click)
-        return `<a href="javascript:void(0)" 
-                   class="wiki-link wiki-link-path" 
-                   data-note-path="${trimmedName}"
-                   data-note-title="${trimmedName}">
-                  ${trimmedName}
-                </a>`;
-      } else {
-        // Title-based link - find by title
-        targetNote = notes.find(n => 
-          n.title.toLowerCase() === trimmedName.toLowerCase()
-        );
-      }
-      
-      if (targetNote && targetNote.id) {
-        // Note exists - create clickable link
-        return `<a href="javascript:void(0)" 
-                   class="wiki-link" 
-                   data-note-id="${targetNote.id}"
-                   data-note-title="${trimmedName}">
-                  ${trimmedName}
-                </a>`;
-      } else if (!trimmedName.startsWith('/')) {
-        // Note doesn't exist and it's not a path - show as broken link
-        return `<span class="wiki-link-broken" 
-                      title="Note not found: ${trimmedName}">
-                  ${trimmedName}
-                </span>`;
-      }
-      
-      // Fallback
-      return match;
-    });
-    
-    return processed;
+    return this.content();
   });
   
   constructor() {
     const renderer = new marked.Renderer();
     
-    renderer.listitem = (item: any) => {
-      const { text, task, checked } = item;
+    // Fix for marked v16+: Custom list renderer that properly handles inline formatting
+    renderer.listitem = function(item: any) {
+      const { task, checked, tokens } = item;
+      
+      // Check if tokens contain only inline content or have block content
+      const hasBlockContent = tokens.some((t: any) => t.type === 'list' || t.type === 'paragraph');
+      
+      let text;
+      if (hasBlockContent) {
+        // Has nested lists or paragraphs, use parse() for block-level content
+        text = this.parser.parse(tokens, false);
+      } else {
+        // Only inline content (text, strong, em, etc.), use parseInline()
+        text = this.parser.parseInline(tokens);
+      }
+      
       if (task) {
         const checkboxHtml = checked 
           ? '<input type="checkbox" checked />' 
@@ -169,6 +134,7 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
     marked.use({
       gfm: true,
       breaks: false,
+      pedantic: false, // Explicitly set to false for better inline formatting
       renderer: renderer
     });
 
@@ -193,8 +159,51 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
   renderedHtml = computed<SafeHtml>(() => {
     try {
       const md = this.processedContent();
-      const raw = marked.parse(md) as string;
-      return this.sanitizer.bypassSecurityTrustHtml(raw);
+      let html = marked.parse(md) as string;
+      
+      // Process wiki links AFTER markdown parsing to avoid breaking markdown syntax
+      const notes = this.allNotes();
+      html = html.replace(/\[\[([^\]]+)\]\]/g, (match, noteName) => {
+        const trimmedName = noteName.trim();
+        let targetNote: Note | undefined;
+        
+        // Check if it's a path-based link (starts with /)
+        if (trimmedName.startsWith('/')) {
+          // For path-based links, we'll mark them specially and resolve them on click
+          return `<a href="javascript:void(0)" 
+                     class="wiki-link wiki-link-path" 
+                     data-note-path="${trimmedName}"
+                     data-note-title="${trimmedName}">
+                    ${trimmedName}
+                  </a>`;
+        } else {
+          // Title-based link - find by title
+          targetNote = notes.find(n => 
+            n.title.toLowerCase() === trimmedName.toLowerCase()
+          );
+        }
+        
+        if (targetNote && targetNote.id) {
+          // Note exists - create clickable link
+          return `<a href="javascript:void(0)" 
+                     class="wiki-link" 
+                     data-note-id="${targetNote.id}"
+                     data-note-title="${trimmedName}">
+                    ${trimmedName}
+                  </a>`;
+        } else if (!trimmedName.startsWith('/')) {
+          // Note doesn't exist and it's not a path - show as broken link
+          return `<span class="wiki-link-broken" 
+                        title="Note not found: ${trimmedName}">
+                    ${trimmedName}
+                  </span>`;
+        }
+        
+        // Fallback
+        return match;
+      });
+      
+      return this.sanitizer.bypassSecurityTrustHtml(html);
     } catch (e) {
       console.error('Markdown render error', e);
       return this.sanitizer.bypassSecurityTrustHtml('<pre>Error rendering preview</pre>');

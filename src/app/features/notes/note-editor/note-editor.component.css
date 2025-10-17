@@ -115,19 +115,28 @@
   margin: 0.25em 0;
   line-height: 1.7;
   padding-left: 0.5em;
+  font-weight: normal;
 }
 
-/* Ensure bold and italic work inside list items */
 .markdown-preview li strong,
 .markdown-preview li b {
   font-weight: 700 !important;
-  color: inherit;
+  color: inherit !important;
+  display: inline !important;
 }
 
 .markdown-preview li em,
 .markdown-preview li i {
   font-style: italic !important;
-  color: inherit;
+  color: inherit !important;
+  display: inline !important;
+}
+
+.markdown-preview li del,
+.markdown-preview li s {
+  text-decoration: line-through !important;
+  color: inherit !important;
+  display: inline !important;
 }
 
 /* Task list items (checkboxes) - remove bullets */
@@ -323,6 +332,13 @@
   color: rgba(0, 242, 254, 0.95);
 }
 
+/* Strikethrough text */
+.markdown-preview del,
+.markdown-preview s {
+  text-decoration: line-through !important;
+  color: rgba(0, 242, 254, 0.8);
+  opacity: 0.9;
+}
 
 
 /* Syntax Highlighting (Prism) - Let Prism handle most colors */
