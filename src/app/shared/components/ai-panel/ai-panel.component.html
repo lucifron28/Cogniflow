@@ -1,0 +1,232 @@
+<!-- AI Panel Overlay with Resizable Width -->
+<div class="fixed right-0 top-0 h-full bg-gray-900 border-l border-cyan-500/30 shadow-2xl z-40 flex transform transition-transform duration-300"
+    [class.translate-x-0]="isVisible()" [class.translate-x-full]="!isVisible()" [style.width.px]="panelWidth()"
+    [class.cursor-col-resize]="isResizing()">
+
+    <!-- Resize Handle (Left Edge) -->
+    <div #resizeHandle (mousedown)="onMouseDown($event)"
+        class="absolute left-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-cyan-400/50 transition-colors group"
+        title="Drag to resize">
+        <div
+            class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-cyan-400/30 group-hover:bg-cyan-400 transition-colors rounded-r">
+        </div>
+    </div>
+
+    <!-- Panel Content -->
+    <div class="flex flex-col w-full ml-1">
+        <!-- Header -->
+        <div
+            class="flex items-center justify-between p-4 border-b border-gray-800 bg-gray-900/80 backdrop-blur-sm flex-shrink-0">
+            <div class="flex items-center gap-2">
+                <!-- Robot Icon SVG -->
+                <svg class="w-5 h-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="8" width="16" height="12" rx="2" />
+                    <path d="M9 12h.01" />
+                    <path d="M15 12h.01" />
+                    <path d="M9 16h6" />
+                    <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                <h2 class="text-lg font-semibold text-cyan-400">Lucid Chat</h2>
+            </div>
+            <div class="flex items-center gap-2">
+                <button (click)="clearChat()"
+                    class="text-gray-400 hover:text-cyan-400 transition-colors p-1 rounded hover:bg-gray-800"
+                    title="Clear chat">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+                <button (click)="onClose()"
+                    class="text-gray-400 hover:text-white transition-colors p-1 rounded hover:bg-gray-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="p-3 space-y-2 border-b border-gray-800 flex-shrink-0">
+            <div class="text-xs text-gray-400 uppercase tracking-wide mb-2">Quick Actions</div>
+            <div class="grid grid-cols-2 gap-2">
+                <button (click)="onSummarize()" [disabled]="isLoading()"
+                    class="flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed rounded-lg transition-all duration-200 text-white font-medium text-xs">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Summarize
+                </button>
+
+                <button (click)="onExplainConcept()" [disabled]="isLoading()"
+                    class="flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed rounded-lg transition-all duration-200 text-white font-medium text-xs">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Explain
+                </button>
+
+                <button (click)="onGenerateQuiz()" [disabled]="isLoading()"
+                    class="flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed rounded-lg transition-all duration-200 text-white font-medium text-xs">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    Quiz
+                </button>
+
+                <button (click)="onSuggestTags()" [disabled]="isLoading()"
+                    class="flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed rounded-lg transition-all duration-200 text-white font-medium text-xs">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    Tags
+                </button>
+            </div>
+
+            <!-- Apply Tags Button (when tags are available) -->
+            @if (suggestedTags().length > 0) {
+            <button (click)="onApplyTags()"
+                class="w-full px-3 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg transition-colors text-white font-medium text-sm mt-2">
+                Apply Tags to Note
+            </button>
+            }
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div #chatContainer class="flex-1 overflow-y-auto p-4 space-y-4">
+
+            @if (chatMessages().length === 0 && !isLoading()) {
+            <div class="flex flex-col items-center justify-center h-full text-center p-6">
+                <svg class="w-16 h-16 text-cyan-400/30 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <rect x="4" y="8" width="16" height="12" rx="2" />
+                    <path d="M9 12h.01" />
+                    <path d="M15 12h.01" />
+                    <path d="M9 16h6" />
+                    <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                <h3 class="text-lg font-semibold text-gray-300 mb-2">Start chatting with Lucid</h3>
+                <p class="text-sm text-gray-500 mb-4">Ask questions, get explanations, or use quick actions above</p>
+                <div class="text-xs text-gray-600 space-y-1">
+                    <p>💡 Try: "Explain this in simple terms"</p>
+                    <p>📝 Try: "Create a study guide"</p>
+                    <p>🤔 Try: "What are the key concepts?"</p>
+                </div>
+            </div>
+            }
+
+            <!-- Chat Messages -->
+            @for (message of chatMessages(); track message.timestamp) {
+            <div class="flex gap-3" [class.flex-row-reverse]="message.role === 'user'">
+                <!-- Avatar -->
+                <div class="flex-shrink-0">
+                    @if (message.role === 'user') {
+                    <div class="w-8 h-8 rounded-full bg-cyan-600 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    } @else {
+                    <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="4" y="8" width="16" height="12" rx="2" />
+                            <path d="M9 12h.01" />
+                            <path d="M15 12h.01" />
+                            <path d="M9 16h6" />
+                        </svg>
+                    </div>
+                    }
+                </div>
+
+                <!-- Message Content -->
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs font-semibold" [class.text-cyan-400]="message.role === 'user'"
+                            [class.text-purple-400]="message.role === 'assistant'">
+                            {{ message.role === 'user' ? 'You' : 'Lucid' }}
+                        </span>
+                        <span class="text-xs text-gray-500">
+                            {{ message.timestamp.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) }}
+                        </span>
+                    </div>
+                    <div class="rounded-lg p-3 markdown-preview overflow-x-auto"
+                        [class.bg-cyan-600/20]="message.role === 'user'" [class.border]="message.role === 'user'"
+                        [class.border-cyan-500/30]="message.role === 'user'"
+                        [class.bg-gray-800/50]="message.role === 'assistant'"
+                        [class.border]="message.role === 'assistant'"
+                        [class.border-gray-700]="message.role === 'assistant'" [innerHTML]="message.htmlContent">
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Loading State -->
+            @if (isLoading()) {
+            <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <rect x="4" y="8" width="16" height="12" rx="2" />
+                        <path d="M9 12h.01" />
+                        <path d="M15 12h.01" />
+                        <path d="M9 16h6" />
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-3">
+                        <div class="flex items-center gap-2">
+                            <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-cyan-400"></div>
+                            <span class="text-sm text-gray-400">Lucid is thinking...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <!-- Error Message -->
+            @if (error() && !isLoading()) {
+            <div class="bg-red-900/20 border border-red-500/50 rounded-lg p-3">
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-2 text-red-400 text-sm">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>{{ error() }}</span>
+                    </div>
+                    @if (error().includes('Rate limit')) {
+                    <p class="text-xs text-red-300">
+                        💡 Wait 10-60s between requests
+                    </p>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Input Area -->
+        <div class="border-t border-gray-800 p-4 bg-gray-900/50 flex-shrink-0">
+            <div class="flex gap-2">
+                <input type="text" [(ngModel)]="userMessage" (keydown.enter)="onSendMessage()" [disabled]="isLoading()"
+                    placeholder="Ask Lucid anything..."
+                    class="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed text-sm">
+                <button (click)="onSendMessage()" [disabled]="isLoading() || !userMessage().trim()"
+                    class="px-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed rounded-lg transition-all duration-200 text-white font-medium">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                </button>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Press Enter to send • Drag left edge to resize</p>
+        </div>
+    </div>
+</div>
