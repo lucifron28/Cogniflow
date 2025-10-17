@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../../core/services/theme.service';
 import { IconComponent, IconName } from '../icon/icon.component';
-import { NotesService } from '../../../services/notes.service';
+import { NotesService } from '../../../core/services/notes.service';
 import { Note } from '../../../core/models/note.model';
 import Fuse from 'fuse.js';
 

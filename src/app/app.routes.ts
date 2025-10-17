@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { NotesComponent } from './features/notes/notes.component';
 import { NoteEditorComponent } from './features/notes/note-editor/note-editor.component';
 import { AnalyticsComponent } from './features/analytics/analytics.component';
-import { TasksComponent } from './pages/tasks/tasks.component';
+import { TasksComponent } from './features/tasks/tasks.component';
 import { AuthComponent } from './features/auth/auth.component';
 import { authGuard } from './core/guards/auth.guard';
 import { publicGuard } from './core/guards/public.guard';

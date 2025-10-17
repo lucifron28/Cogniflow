@@ -2,8 +2,8 @@ import { Component, signal, inject, OnInit, computed, HostListener, OnDestroy, e
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { IconComponent } from '../../shared/components/icon/icon.component';
-import { NotesService } from '../../services/notes.service';
-import { FolderService } from '../../services/folder.service';
+import { NotesService } from '../../core/services/notes.service';
+import { FolderService } from '../../core/services/folder.service';
 import { NoteMetadata, Folder } from '../../core/models/note.model';
 
 @Component({

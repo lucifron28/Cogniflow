@@ -13,7 +13,7 @@ import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-bash';
-import { NotesService } from '../../../services/notes.service';
+import { NotesService } from '../../../core/services/notes.service';
 import { Note } from '../../../core/models/note.model';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { AiPanelComponent } from '../../../shared/components/ai-panel/ai-panel.component';

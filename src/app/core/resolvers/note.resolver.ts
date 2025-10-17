@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { Observable, of, take, catchError } from 'rxjs';
 import { Note } from '../models/note.model';
-import { NotesService } from '../../services/notes.service';
+import { NotesService } from '../services/notes.service';
 
 export const noteResolver: ResolveFn<Note | null> = (route): Observable<Note | null> => {
   const notesService = inject(NotesService);
