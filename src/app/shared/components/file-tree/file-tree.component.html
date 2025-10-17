@@ -28,16 +28,17 @@
         @if (node.type === 'folder') {
         <!-- Folder -->
         <div class="tree-node folder-node">
-            <div class="node-content" (click)="toggleFolder(node)" (contextmenu)="showContextMenu($event, node)">
-                <div class="node-icon">
+            <div class="node-content" (contextmenu)="showContextMenu($event, node)">
+                <div class="node-icon" (click)="toggleFolder(node); $event.stopPropagation()">
                     @if (node.expanded) {
                     <app-icon name="chevron-down" size="sm"></app-icon>
                     } @else {
                     <app-icon name="chevron-right" size="sm"></app-icon>
                     }
                 </div>
-                <app-icon [name]="node.expanded ? 'folder-open' : 'folder'" size="sm"></app-icon>
-                <span class="node-name">{{ node.name }}</span>
+                <app-icon [name]="node.expanded ? 'folder-open' : 'folder'" size="sm"
+                    (click)="openFolder(node.id)"></app-icon>
+                <span class="node-name" (click)="openFolder(node.id)">{{ node.name }}</span>
             </div>
 
             <!-- Folder's drop zone -->
@@ -52,17 +53,17 @@
                 @if (child.type === 'folder') {
                 <!-- Recursive folder -->
                 <div class="tree-node folder-node">
-                    <div class="node-content" (click)="toggleFolder(child)"
-                        (contextmenu)="showContextMenu($event, child)">
-                        <div class="node-icon">
+                    <div class="node-content" (contextmenu)="showContextMenu($event, child)">
+                        <div class="node-icon" (click)="toggleFolder(child); $event.stopPropagation()">
                             @if (child.expanded) {
                             <app-icon name="chevron-down" size="sm"></app-icon>
                             } @else {
                             <app-icon name="chevron-right" size="sm"></app-icon>
                             }
                         </div>
-                        <app-icon [name]="child.expanded ? 'folder-open' : 'folder'" size="sm"></app-icon>
-                        <span class="node-name">{{ child.name }}</span>
+                        <app-icon [name]="child.expanded ? 'folder-open' : 'folder'" size="sm"
+                            (click)="openFolder(child.id)"></app-icon>
+                        <span class="node-name" (click)="openFolder(child.id)">{{ child.name }}</span>
                     </div>
 
                     @if (child.expanded) {
