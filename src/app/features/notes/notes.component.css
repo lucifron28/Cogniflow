@@ -105,3 +105,25 @@
   outline: 2px solid var(--color-electric-cyan);
   box-shadow: 0 0 20px rgba(0, 212, 255, 0.4) !important;
 }
+
+/* List View Specific Styles */
+.note-list-item {
+  min-height: 70px;
+}
+
+.note-list-item:hover {
+  transform: translateX(4px);
+}
+
+/* Responsive adjustments for list view */
+@media (max-width: 768px) {
+  .note-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .note-list-item > div {
+    width: 100%;
+  }
+}
