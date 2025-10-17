@@ -20,22 +20,16 @@
         <div class="flex items-center gap-3">
             <!-- View Toggle -->
             <div class="flex items-center gap-1 view-toggle-group">
-                <button 
-                    (click)="viewMode.set('grid')"
-                    [class.active]="viewMode() === 'grid'"
-                    class="view-toggle-btn px-3 py-2 rounded-lg border transition-all"
-                    title="Grid View">
+                <button (click)="viewMode.set('grid')" [class.active]="viewMode() === 'grid'"
+                    class="view-toggle-btn px-3 py-2 rounded-lg border transition-all" title="Grid View">
                     <app-icon name="notes" size="sm"></app-icon>
                 </button>
-                <button 
-                    (click)="viewMode.set('list')"
-                    [class.active]="viewMode() === 'list'"
-                    class="view-toggle-btn px-3 py-2 rounded-lg border transition-all"
-                    title="List View">
+                <button (click)="viewMode.set('list')" [class.active]="viewMode() === 'list'"
+                    class="view-toggle-btn px-3 py-2 rounded-lg border transition-all" title="List View">
                     <app-icon name="menu" size="sm"></app-icon>
                 </button>
             </div>
-            
+
             <!-- Sort Dropdown -->
             <div class="relative">
                 <select [value]="sortBy()" (change)="onSortChange($any($event.target).value)"
@@ -97,125 +91,125 @@
 
     <!-- Notes Display -->
     @else {
-        <!-- Grid View -->
-        @if (viewMode() === 'grid') {
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @for (note of filteredNotes(); track note.id; let i = $index) {
-            <a [routerLink]="['/notes', note.id]" [class.selected-note]="selectedIndex() === i"
-                class="note-card card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all cursor-pointer group">
-                <div class="flex items-start justify-between mb-3">
-                    <h3 class="text-lg font-semibold group-hover:text-glow transition-colors flex-1 truncate">
-                        {{ note.title || 'Untitled' }}
-                    </h3>
-                    <div class="flex gap-2 ml-2">
-                        @if (note.isPinned) {
-                        <app-icon name="pin" size="sm" customClass="opacity-60"></app-icon>
-                        }
-                        @if (note.isFavorite) {
-                        <app-icon name="star" size="sm" customClass="opacity-60"></app-icon>
-                        }
-                    </div>
-                </div>
-
-                @if (note.tags.length > 0) {
-                <div class="flex flex-wrap gap-2 mb-3">
-                    @for (tag of note.tags.slice(0, 3); track tag) {
-                    <span class="px-2 py-1 rounded text-xs opacity-60" style="background-color: rgba(0, 242, 254, 0.1);">
-                        #{{ tag }}
-                    </span>
+    <!-- Grid View -->
+    @if (viewMode() === 'grid') {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (note of filteredNotes(); track note.id; let i = $index) {
+        <a [routerLink]="['/notes', note.id]" [class.selected-note]="selectedIndex() === i"
+            class="note-card card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all cursor-pointer group">
+            <div class="flex items-start justify-between mb-3">
+                <h3 class="text-lg font-semibold group-hover:text-glow transition-colors flex-1 truncate">
+                    {{ note.title || 'Untitled' }}
+                </h3>
+                <div class="flex gap-2 ml-2">
+                    @if (note.isPinned) {
+                    <app-icon name="pin" size="sm" customClass="opacity-60"></app-icon>
                     }
-                    @if (note.tags.length > 3) {
-                    <span class="px-2 py-1 rounded text-xs opacity-40">
-                        +{{ note.tags.length - 3 }}
-                    </span>
+                    @if (note.isFavorite) {
+                    <app-icon name="star" size="sm" customClass="opacity-60"></app-icon>
                     }
                 </div>
-                }
+            </div>
 
-                @if (note.contentPreview) {
-                <p class="text-sm opacity-60 mb-3 line-clamp-2">
-                    {{ note.contentPreview }}
-                </p>
+            @if (note.tags.length > 0) {
+            <div class="flex flex-wrap gap-2 mb-3">
+                @for (tag of note.tags.slice(0, 3); track tag) {
+                <span class="px-2 py-1 rounded text-xs opacity-60" style="background-color: rgba(0, 242, 254, 0.1);">
+                    #{{ tag }}
+                </span>
                 }
-
-                <div class="flex items-center justify-between text-sm opacity-50">
-                    <div class="flex items-center gap-4">
-                        <span>{{ note.wordCount }} words</span>
-                        @if (note.linkedNotesCount > 0) {
-                        <span class="flex items-center gap-1">
-                            <app-icon name="link" size="xs"></app-icon>
-                            {{ note.linkedNotesCount }}
-                        </span>
-                        }
-                    </div>
-                    <span>{{ formatDate(note.updatedAt) }}</span>
-                </div>
-            </a>
+                @if (note.tags.length > 3) {
+                <span class="px-2 py-1 rounded text-xs opacity-40">
+                    +{{ note.tags.length - 3 }}
+                </span>
+                }
+            </div>
             }
-        </div>
-        }
-        
-        <!-- List View -->
-        @else {
-        <div class="flex flex-col gap-3">
-            @for (note of filteredNotes(); track note.id; let i = $index) {
-            <a [routerLink]="['/notes', note.id]" [class.selected-note]="selectedIndex() === i"
-                class="note-card note-list-item card p-4 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all cursor-pointer group flex items-center gap-4">
-                
-                <!-- Left: Icon and Title -->
-                <div class="flex items-center gap-3 flex-1 min-w-0">
-                    <app-icon name="document" size="md" customClass="opacity-60 flex-shrink-0"></app-icon>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2 mb-1">
-                            <h3 class="text-base font-semibold group-hover:text-glow transition-colors truncate">
-                                {{ note.title || 'Untitled' }}
-                            </h3>
-                            @if (note.isPinned) {
-                            <app-icon name="pin" size="xs" customClass="opacity-60 flex-shrink-0"></app-icon>
-                            }
-                            @if (note.isFavorite) {
-                            <app-icon name="star" size="xs" customClass="opacity-60 flex-shrink-0"></app-icon>
-                            }
-                        </div>
-                        @if (note.contentPreview) {
-                        <p class="text-sm opacity-60 truncate">
-                            {{ note.contentPreview }}
-                        </p>
-                        }
-                    </div>
-                </div>
-                
-                <!-- Middle: Tags -->
-                @if (note.tags.length > 0) {
-                <div class="flex items-center gap-2 flex-shrink-0">
-                    @for (tag of note.tags.slice(0, 2); track tag) {
-                    <span class="px-2 py-1 rounded text-xs opacity-60" style="background-color: rgba(0, 242, 254, 0.1);">
-                        #{{ tag }}
-                    </span>
-                    }
-                    @if (note.tags.length > 2) {
-                    <span class="text-xs opacity-40">+{{ note.tags.length - 2 }}</span>
-                    }
-                </div>
-                }
-                
-                <!-- Right: Metadata -->
-                <div class="flex items-center gap-6 text-sm opacity-50 flex-shrink-0">
-                    <span class="flex items-center gap-1">
-                        <app-icon name="document" size="xs"></app-icon>
-                        {{ note.wordCount }}
-                    </span>
+
+            @if (note.contentPreview) {
+            <p class="text-sm opacity-60 mb-3 line-clamp-2">
+                {{ note.contentPreview }}
+            </p>
+            }
+
+            <div class="flex items-center justify-between text-sm opacity-50">
+                <div class="flex items-center gap-4">
+                    <span>{{ note.wordCount }} words</span>
                     @if (note.linkedNotesCount > 0) {
                     <span class="flex items-center gap-1">
                         <app-icon name="link" size="xs"></app-icon>
                         {{ note.linkedNotesCount }}
                     </span>
                     }
-                    <span class="min-w-[80px] text-right">{{ formatDate(note.updatedAt) }}</span>
                 </div>
-            </a>
-            }
-        </div>
+                <span>{{ formatDate(note.updatedAt) }}</span>
+            </div>
+        </a>
         }
+    </div>
+    }
+
+    <!-- List View -->
+    @else {
+    <div class="flex flex-col gap-3">
+        @for (note of filteredNotes(); track note.id; let i = $index) {
+        <a [routerLink]="['/notes', note.id]" [class.selected-note]="selectedIndex() === i"
+            class="note-card note-list-item card p-4 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all cursor-pointer group flex items-center gap-4">
+
+            <!-- Left: Icon and Title -->
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+                <app-icon name="document" size="md" customClass="opacity-60 flex-shrink-0"></app-icon>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                        <h3 class="text-base font-semibold group-hover:text-glow transition-colors truncate">
+                            {{ note.title || 'Untitled' }}
+                        </h3>
+                        @if (note.isPinned) {
+                        <app-icon name="pin" size="xs" customClass="opacity-60 flex-shrink-0"></app-icon>
+                        }
+                        @if (note.isFavorite) {
+                        <app-icon name="star" size="xs" customClass="opacity-60 flex-shrink-0"></app-icon>
+                        }
+                    </div>
+                    @if (note.contentPreview) {
+                    <p class="text-sm opacity-60 truncate">
+                        {{ note.contentPreview }}
+                    </p>
+                    }
+                </div>
+            </div>
+
+            <!-- Middle: Tags -->
+            @if (note.tags.length > 0) {
+            <div class="flex items-center gap-2 flex-shrink-0">
+                @for (tag of note.tags.slice(0, 2); track tag) {
+                <span class="px-2 py-1 rounded text-xs opacity-60" style="background-color: rgba(0, 242, 254, 0.1);">
+                    #{{ tag }}
+                </span>
+                }
+                @if (note.tags.length > 2) {
+                <span class="text-xs opacity-40">+{{ note.tags.length - 2 }}</span>
+                }
+            </div>
+            }
+
+            <!-- Right: Metadata -->
+            <div class="flex items-center gap-6 text-sm opacity-50 flex-shrink-0">
+                <span class="flex items-center gap-1">
+                    <app-icon name="document" size="xs"></app-icon>
+                    {{ note.wordCount }}
+                </span>
+                @if (note.linkedNotesCount > 0) {
+                <span class="flex items-center gap-1">
+                    <app-icon name="link" size="xs"></app-icon>
+                    {{ note.linkedNotesCount }}
+                </span>
+                }
+                <span class="min-w-[80px] text-right">{{ formatDate(note.updatedAt) }}</span>
+            </div>
+        </a>
+        }
+    </div>
+    }
     }
 </div>
