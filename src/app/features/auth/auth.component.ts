@@ -11,7 +11,8 @@ type AuthMode = 'login' | 'signup';
   selector: 'app-auth',
   standalone: true,
   imports: [CommonModule, FormsModule, IconComponent],
-  templateUrl: './auth.component.html'
+  templateUrl: './auth.component.html',
+  styleUrl: './auth.component.css'
 })
 export class AuthComponent {
   mode = signal<AuthMode>('login');
