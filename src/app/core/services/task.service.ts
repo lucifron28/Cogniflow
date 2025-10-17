@@ -19,7 +19,7 @@ import {
 } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { Observable, BehaviorSubject, map } from 'rxjs';
-import { Task, TaskStatus, Priority } from '../core/models/task.model';
+import { Task, TaskStatus, Priority } from '../models/task.model';
 
 export interface TaskFilter {
   status?: TaskStatus[];

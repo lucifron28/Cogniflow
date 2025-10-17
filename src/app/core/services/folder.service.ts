@@ -18,7 +18,7 @@ import {
 } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { Folder } from '../core/models/note.model';
+import { Folder } from '../models/note.model';
 
 @Injectable({ providedIn: 'root' })
 export class FolderService {

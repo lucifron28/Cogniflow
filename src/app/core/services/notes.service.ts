@@ -19,7 +19,7 @@ import {
 } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { Observable, BehaviorSubject, ReplaySubject, map, of, catchError, shareReplay, switchMap, filter, take } from 'rxjs';
-import { Note, NoteMetadata, NoteFilter, Folder } from '../core/models/note.model';
+import { Note, NoteMetadata, NoteFilter, Folder } from '../models/note.model';
 import { FolderService } from './folder.service';
 
 @Injectable({ providedIn: 'root' })
