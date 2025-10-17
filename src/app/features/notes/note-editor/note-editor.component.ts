@@ -42,6 +42,7 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
   title = signal('');
   content = signal('');
   tags = signal<string[]>([]);
+  currentTag = ''; // For tag input field
   editorView = signal<EditorView>('split');
   isSaving = signal(false);
   isLoading = signal(false);
@@ -332,6 +333,27 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
         this.isLoading.set(false);
       }
     });
+  }
+
+  // Tag management methods
+  addTag() {
+    const tag = this.currentTag.trim();
+    if (!tag) return; // Don't add empty tags
+    
+    const currentTags = this.tags();
+    if (currentTags.includes(tag)) {
+      // Tag already exists, don't add duplicate
+      this.currentTag = '';
+      return;
+    }
+    
+    this.tags.set([...currentTags, tag]);
+    this.currentTag = ''; // Clear input
+  }
+
+  removeTag(index: number) {
+    const currentTags = this.tags();
+    this.tags.set(currentTags.filter((_, i) => i !== index));
   }
 
   setView(view: EditorView) {
