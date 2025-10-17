@@ -92,6 +92,12 @@
   outline: none;
   color: var(--text);
   font-size: 0.95rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
 }
 
 /* Filters */
