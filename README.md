@@ -30,6 +30,11 @@ Cogniflow is an AI-powered markdown-based note-taking web application designed t
 
 ### Key Features
 
+- **Lucid AI Assistant** - AI-powered features with Google Gemini:
+  - 🤖 **Summarize** - Generate concise summaries of your notes
+  - 💡 **Explain Concepts** - Get detailed explanations of selected text
+  - 📝 **Generate Quizzes** - Create study questions from your content
+  - 🏷️ **Suggest Tags** - Auto-generate relevant tags for organization
 - **Markdown Editor** with live preview and syntax highlighting
 - **Hierarchical Folder System** with drag-and-drop organization
 - **Wiki-Style Linking** with `[[Note Title]]` and `[[/path/to/note]]` syntax
@@ -168,9 +173,16 @@ npm test           # Run unit tests
 
 ## Keyboard Shortcuts
 
+### Global
 - `Ctrl/Cmd + K` - Global search
 - `Ctrl/Cmd + N` - New note
+
+### Note Editor
 - `Ctrl/Cmd + S` - Save note
+- `Ctrl/Cmd + E` - Cycle editor view (Split/Editor/Preview)
+- `Ctrl/Cmd + L` - Toggle Lucid AI Assistant
+
+### Navigation
 - `Arrow keys` - Navigate notes
 - `Enter` - Open selected note
 - `Delete` - Delete selected note
@@ -192,6 +204,11 @@ npm test           # Run unit tests
 - [x] Real-time sync
 - [x] Code block enhancements
 - [x] Task management
+- [x] **Lucid AI Assistant** - Gemini-powered features:
+  - [x] Summarize notes
+  - [x] Explain concepts
+  - [x] Generate quiz questions
+  - [x] Suggest tags
 
 ### In Progress
 - [ ] Filtering sidebar (tags, dates)
