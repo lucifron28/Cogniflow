@@ -19,43 +19,38 @@ import {
 } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { Observable, BehaviorSubject, ReplaySubject, map, of, catchError, shareReplay, switchMap, filter, take } from 'rxjs';
-import { Note, NoteMetadata, NoteFilter } from '../core/models/note.model';
+import { Note, NoteMetadata, NoteFilter, Folder } from '../core/models/note.model';
+import { FolderService } from './folder.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotesService implements OnDestroy {
   private firestore = inject(Firestore);
   private auth = inject(Auth);
   private envInjector = inject(EnvironmentInjector);
+  private folderService = inject(FolderService);
   private notesCollectionRef: CollectionReference<DocumentData>;
 
-  // Real-time listener state
   private notesSubject = new BehaviorSubject<Note[]>([]);
   private notesListener: Unsubscribe | null = null;
   
-  // In-memory cache for individual notes (using ReplaySubject to avoid initial null)
   private noteCache = new Map<string, ReplaySubject<Note | null>>();
   private noteListeners = new Map<string, Unsubscribe>();
   
-  // Track auth readiness
   private authReady = new BehaviorSubject<boolean>(false);
 
   constructor() {
-    // Create collection ref inside injection context
     this.notesCollectionRef = collection(this.firestore, 'notes');
     
-    // Start listening when user is authenticated
     this.auth.onAuthStateChanged(user => {
-      this.authReady.next(true); // Mark auth as ready
+      this.authReady.next(true);
       
       if (user) {
         this.startNotesListener();
       } else {
-        // Clean up when user logs out
         this.notesListener?.();
         this.notesListener = null;
         this.notesSubject.next([]);
         
-        // Clean up individual note listeners
         this.noteListeners.forEach(unsub => unsub());
         this.noteListeners.clear();
         this.noteCache.forEach(subject => subject.complete());
@@ -65,7 +60,6 @@ export class NotesService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    // Clean up all listeners
     this.notesListener?.();
     this.noteListeners.forEach(unsub => unsub());
     this.noteCache.forEach(subject => subject.complete());
@@ -75,7 +69,6 @@ export class NotesService implements OnDestroy {
     return this.notesCollectionRef;
   }
 
-  // Helpers to run Firebase calls inside Angular injection context
   private inCtxObs<T>(op: () => Promise<T>): Observable<T> {
     return new Observable<T>((subscriber) => {
       const promise = runInInjectionContext(this.envInjector, () => {
@@ -116,9 +109,7 @@ export class NotesService implements OnDestroy {
     } as Note;
   }
 
-  // Real-time listeners for notes list
   private startNotesListener(): void {
-    // Prevent multiple listeners
     if (this.notesListener) {
       return;
     }
@@ -147,7 +138,6 @@ export class NotesService implements OnDestroy {
     });
   }
 
-  // Real-time listener for individual note
   private startNoteListener(noteId: string): Observable<Note | null> {
     if (this.noteCache.has(noteId)) {
       return this.noteCache.get(noteId)!.asObservable();
@@ -192,7 +182,6 @@ export class NotesService implements OnDestroy {
     return subject.asObservable();
   }
 
-  // Invalidate cache for a specific note
   private invalidateNoteCache(noteId: string): void {
     const subject = this.noteCache.get(noteId);
     if (subject) {
@@ -204,7 +193,6 @@ export class NotesService implements OnDestroy {
     }
   }
 
-  // Create
   async createNote(noteData: Omit<Note, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<string> {
     const userId = this.getCurrentUserId();
     if (!userId) throw new Error('User must be authenticated to create notes');
@@ -212,6 +200,7 @@ export class NotesService implements OnDestroy {
     const now = Timestamp.now();
     const note = {
       ...noteData,
+      slug: noteData.slug || this.generateSlug(noteData.title), // Auto-generate slug if not provided
       userId,
       createdAt: now,
       updatedAt: now,
@@ -223,9 +212,7 @@ export class NotesService implements OnDestroy {
     return docRef.id;
   }
 
-  // Read (Observable) - now uses real-time listener with cache
   getNote(noteId: string): Observable<Note | null> {
-    // Wait for auth to be ready before starting the listener
     return this.authReady.pipe(
       filter(ready => ready),
       take(1),
@@ -233,7 +220,6 @@ export class NotesService implements OnDestroy {
     );
   }
 
-  // Read (Promise)
   async getNoteOnce(noteId: string): Promise<Note | null> {
     const userId = this.getCurrentUserId();
     if (!userId) return null;
@@ -246,7 +232,6 @@ export class NotesService implements OnDestroy {
     return this.convertTimestamps({ id: snap.id, ...data });
   }
 
-  // Update
   async updateNote(noteId: string, updates: Partial<Note>): Promise<void> {
     const userId = this.getCurrentUserId();
     if (!userId) throw new Error('User must be authenticated to update notes');
@@ -263,7 +248,6 @@ export class NotesService implements OnDestroy {
     await this.inCtxPromise(() => updateDoc(noteDocRef, updateData));
   }
 
-  // Delete
   async deleteNote(noteId: string): Promise<void> {
     const userId = this.getCurrentUserId();
     if (!userId) throw new Error('User must be authenticated to delete notes');
@@ -274,17 +258,14 @@ export class NotesService implements OnDestroy {
 
     await this.inCtxPromise(() => deleteDoc(noteDocRef));
     
-    // Invalidate the cache for this note
     this.invalidateNoteCache(noteId);
   }
 
-  // List (Observable) - now uses real-time listener with filtering
   getNotes(filter?: NoteFilter): Observable<Note[]> {
     return this.notesSubject.asObservable().pipe(
       map((notes) => {
         let out = notes;
 
-        // Apply filters
         if (filter?.isPinned !== undefined) {
           out = out.filter(n => n.isPinned === filter.isPinned);
         }
@@ -304,7 +285,6 @@ export class NotesService implements OnDestroy {
           );
         }
 
-        // Sort
         const sortField = filter?.sortBy || 'updatedAt';
         const sortDirection = filter?.sortOrder || 'desc';
         out.sort((a, b) => {
@@ -325,7 +305,6 @@ export class NotesService implements OnDestroy {
     );
   }
 
-  // List (Promise)
   async getNotesOnce(filter?: NoteFilter): Promise<Note[]> {
     const userId = this.getCurrentUserId();
     if (!userId) return [];
@@ -363,7 +342,6 @@ export class NotesService implements OnDestroy {
     return out;
   }
 
-  // Metadata
   getNotesMetadata(filter?: NoteFilter): Observable<NoteMetadata[]> {
     return this.getNotes(filter).pipe(
       map((notes) =>
@@ -382,7 +360,6 @@ export class NotesService implements OnDestroy {
     );
   }
 
-  // Backlinks
   getBacklinks(noteTitle: string): Observable<Note[]> {
     const userId = this.getCurrentUserId();
     if (!userId) return of([]);
@@ -412,5 +389,68 @@ export class NotesService implements OnDestroy {
     const set = new Set<string>();
     notes.forEach((n) => n.tags.forEach((t) => set.add(t)));
     return Array.from(set).sort();
+  }
+
+  generateSlug(title: string): string {
+    return title
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-')      // Replace spaces with hyphens
+      .replace(/-+/g, '-')       // Replace multiple hyphens with single hyphen
+      .replace(/^-+|-+$/g, '');  // Trim hyphens from start/end
+  }
+
+  async buildNotePath(note: Note, folders?: Folder[]): Promise<string> {
+    let resolvedFolders = folders;
+    if (!resolvedFolders) {
+      resolvedFolders = await this.folderService.getFoldersOnce();
+    }
+
+    const slug = note.slug || this.generateSlug(note.title);
+    
+    if (!note.folderId) {
+      return `/${slug}`;
+    }
+
+    const folderPath: string[] = [];
+    let currentFolderId: string | null = note.folderId;
+    
+    while (currentFolderId) {
+      const folder = resolvedFolders.find(f => f.id === currentFolderId);
+      if (!folder) break;
+      
+      folderPath.unshift(this.generateSlug(folder.name));
+      currentFolderId = folder.parentId;
+    }
+
+    return `/${folderPath.join('/')}/${slug}`;
+  }
+
+  async getNoteByPath(path: string): Promise<Note | null> {
+    const notes = await this.getNotesOnce();
+    const folders = await this.folderService.getFoldersOnce();
+
+    const normalizedPath = path.replace(/^\/+|\/+$/g, '').toLowerCase();
+    const pathParts = normalizedPath.split('/');
+
+    for (const note of notes) {
+      const notePath = await this.buildNotePath(note, folders);
+      const notePathNormalized = notePath.replace(/^\/+|\/+$/g, '').toLowerCase();
+      
+      if (notePathNormalized === normalizedPath) {
+        return note;
+      }
+    }
+
+    return null;
+  }
+
+  async getNoteByIdOrPath(idOrPath: string): Promise<Note | null> {
+    if (idOrPath.includes('/')) {
+      return this.getNoteByPath(idOrPath);
+    }
+    
+    return this.getNoteOnce(idOrPath);
   }
 }
