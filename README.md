@@ -1,9 +1,8 @@
-# Cogniflow
-
 <div align="center">
 
 <img src="/banner/cogniflow-banner.png" alt="Cogniflow Banner" width="420" />
 
+# Cogniflow
 **AI-Powered Markdown Study Notebook**
 
 [![Angular](https://img.shields.io/badge/Angular-20.3-DD0031?style=flat&logo=angular)](https://angular.io/)
@@ -15,6 +14,13 @@
 A modern, intelligent note-taking platform that combines markdown writing, folder organization, wiki-style linking, and AI-assisted features to enhance your learning and productivity.
 
 </div>
+
+---
+
+## Final Project Information
+
+**Course:** Web Development 1 (Frontend) - ITWM101  
+**Group Members:** Solo work
 
 ---
 
@@ -227,13 +233,12 @@ This project is licensed under the MIT License.
 
 **Ron**
 - GitHub: [@lucifron28](https://github.com/lucifron28)
+- LinkedIn: [Ron Vincent Cada](https://www.linkedin.com/in/ron-vincent-cada/)
 - Project: [Cogniflow](https://github.com/lucifron28/Cogniflow)
 
 ---
 
 <div align="center">
-
-**Made with love and coffee by Ron**
 
 [Back to top](#cogniflow)
 
