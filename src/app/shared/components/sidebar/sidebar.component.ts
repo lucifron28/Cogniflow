@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 import { IconComponent } from '../icon/icon.component';
+import { FileTreeComponent } from '../file-tree/file-tree.component';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, ThemeToggleComponent, IconComponent],
+  imports: [CommonModule, RouterLink, RouterLinkActive, ThemeToggleComponent, IconComponent, FileTreeComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
