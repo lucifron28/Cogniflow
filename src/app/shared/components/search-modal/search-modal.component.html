@@ -10,13 +10,14 @@
         <div class="border-b transition-colors" [class.border-cyber-accent/20]="themeService.theme() === 'cyber-glow'"
             [class.border-electric-neon/20]="themeService.theme() === 'electric-sky'">
             <div class="flex items-center gap-3 px-4 py-3">
-                <span class="text-xl">🔍</span>
-                <input type="text" [(ngModel)]="searchQuery" placeholder="Search notes, tasks, tags..."
+                <app-icon name="search" size="md"
+                    [customClass]="themeService.theme() === 'cyber-glow' ? 'text-cyber-accent' : 'text-electric-neon'"></app-icon>
+                <input #searchInput type="text" [(ngModel)]="searchQuery" placeholder="Search notes, tasks, tags..."
                     class="flex-1 bg-transparent outline-none text-base transition-colors"
                     [class.text-cyber-white]="themeService.theme() === 'cyber-glow'"
                     [class.text-electric-black]="themeService.theme() === 'electric-sky'"
                     [class.placeholder:text-cyber-white/40]="themeService.theme() === 'cyber-glow'"
-                    [class.placeholder:text-electric-black/40]="themeService.theme() === 'electric-sky'" autofocus />
+                    [class.placeholder:text-electric-black/40]="themeService.theme() === 'electric-sky'" />
                 <kbd class="text-xs px-2 py-1 rounded border font-mono transition-colors"
                     [class.bg-cyber-accent/10]="themeService.theme() === 'cyber-glow'"
                     [class.border-cyber-accent/30]="themeService.theme() === 'cyber-glow'"
@@ -31,14 +32,18 @@
         <div class="max-h-96 overflow-y-auto">
             @if (results().length === 0 && searchQuery()) {
             <div class="text-center py-12 px-4">
-                <div class="text-4xl mb-3">🔍</div>
+                <div class="flex justify-center mb-3">
+                    <app-icon name="search" size="xl" customClass="w-12 h-12 opacity-40"></app-icon>
+                </div>
                 <p class="text-sm opacity-60">No results found</p>
             </div>
             }
 
             @if (results().length === 0 && !searchQuery()) {
             <div class="text-center py-12 px-4">
-                <div class="text-4xl mb-3">⌨️</div>
+                <div class="flex justify-center mb-3">
+                    <app-icon name="pencil" size="xl" customClass="w-12 h-12 opacity-40"></app-icon>
+                </div>
                 <p class="text-sm opacity-60">Type to search...</p>
                 <p class="text-xs opacity-40 mt-2">Search across notes, tasks, and tags</p>
             </div>
@@ -47,16 +52,24 @@
             @for (result of results(); track result.id; let i = $index) {
             <button class="w-full text-left px-4 py-3 transition-all flex items-start gap-3 border-b cursor-pointer"
                 [class.border-cyber-accent/10]="themeService.theme() === 'cyber-glow'"
-                [class.border-electric-neon/10]="themeService.theme() === 'electric-sky'" [ngClass]="{
-                    'bg-cyber-accent/10': i === selectedIndex() && themeService.theme() === 'cyber-glow',
-                    'hover:bg-cyber-accent/10': themeService.theme() === 'cyber-glow',
-                    'bg-electric-neon/10': i === selectedIndex() && themeService.theme() === 'electric-sky',
-                    'hover:bg-electric-neon/10': themeService.theme() === 'electric-sky'
-                }" (click)="selectResult(i)">
-                <span class="text-xl">{{ result.icon }}</span>
+                [class.border-electric-neon/10]="themeService.theme() === 'electric-sky'"
+                [class.bg-cyber-accent/20]="i === selectedIndex() && themeService.theme() === 'cyber-glow'"
+                [class.border-l-4]="i === selectedIndex()"
+                [class.border-l-cyber-accent]="i === selectedIndex() && themeService.theme() === 'cyber-glow'"
+                [class.hover:bg-cyber-accent/10]="i !== selectedIndex() && themeService.theme() === 'cyber-glow'"
+                [class.bg-electric-neon/20]="i === selectedIndex() && themeService.theme() === 'electric-sky'"
+                [class.border-l-electric-neon]="i === selectedIndex() && themeService.theme() === 'electric-sky'"
+                [class.hover:bg-electric-neon/10]="i !== selectedIndex() && themeService.theme() === 'electric-sky'"
+                (click)="selectResult(i)">
+                <app-icon [name]="result.icon" size="md"
+                    [customClass]="i === selectedIndex() && themeService.theme() === 'cyber-glow' ? 'text-cyber-accent mt-0.5' : i === selectedIndex() && themeService.theme() === 'electric-sky' ? 'text-electric-neon mt-0.5' : 'mt-0.5'"></app-icon>
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2">
-                        <h3 class="font-medium text-sm truncate">{{ result.title }}</h3>
+                        <h3 class="font-medium text-sm truncate"
+                            [class.text-cyber-accent]="i === selectedIndex() && themeService.theme() === 'cyber-glow'"
+                            [class.text-electric-neon]="i === selectedIndex() && themeService.theme() === 'electric-sky'">
+                            {{ result.title }}
+                        </h3>
                         <span class="text-xs opacity-60 uppercase font-semibold tracking-wider">{{ result.type }}</span>
                     </div>
                     @if (result.preview) {
