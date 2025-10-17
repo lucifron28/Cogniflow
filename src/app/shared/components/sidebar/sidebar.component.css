@@ -138,3 +138,70 @@
 :host-context(.electric-sky) .sidebar a.nav-link {
   background-color: rgba(0, 212, 255, 0.05) !important;
 }
+
+/* Logo Styling */
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-bracket {
+  color: var(--color-cyber-accent);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0 10px var(--color-cyber-accent);
+}
+
+.logo-brain {
+  color: var(--color-cyber-accent);
+  filter: drop-shadow(0 0 8px var(--color-cyber-accent));
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.logo-collapsed {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.logo-bracket-small {
+  color: var(--color-cyber-accent);
+  font-weight: 900;
+  line-height: 1;
+  font-size: 0.875rem;
+  text-shadow: 0 0 8px var(--color-cyber-accent);
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px var(--color-cyber-accent));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px var(--color-cyber-accent));
+  }
+}
+
+/* Light theme logo */
+:host-context(.electric-sky) .logo-bracket,
+:host-context(.electric-sky) .logo-bracket-small {
+  color: var(--color-electric-cyan) !important;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5) !important;
+}
+
+:host-context(.electric-sky) .logo-brain {
+  color: var(--color-electric-cyan) !important;
+  filter: drop-shadow(0 0 8px var(--color-electric-cyan)) !important;
+}
+
+@keyframes pulse-glow-light {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px var(--color-electric-cyan));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px var(--color-electric-cyan));
+  }
+}
+
+:host-context(.electric-sky) .logo-brain {
+  animation: pulse-glow-light 3s ease-in-out infinite;
+}
