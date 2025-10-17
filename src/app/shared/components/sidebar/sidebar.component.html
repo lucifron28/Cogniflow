@@ -41,13 +41,10 @@
                     }
                     <span class="text-sm font-semibold">Files</span>
                 </div>
-                <button class="hover-bg p-1 rounded hover:bg-opacity-10">
-                    <app-icon name="plus" size="md"></app-icon>
-                </button>
             </button>
             @if (showFiles()) {
-            <div class="pl-4 space-y-1">
-                <p class="text-sm opacity-50">File tree coming soon...</p>
+            <div class="pl-2">
+                <app-file-tree />
             </div>
             }
         </div>
@@ -114,6 +111,11 @@
 
         <!-- Navigation Links -->
         <div class="nav-section-border pt-4">
+            <a routerLink="/notes" routerLinkActive="bg-opacity-20"
+                class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all mb-2">
+                <app-icon name="file" size="lg"></app-icon>
+                <span class="text-sm">All Notes</span>
+            </a>
             <a routerLink="/tasks" routerLinkActive="bg-opacity-20"
                 class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-opacity-10 transition-all mb-2">
                 <app-icon name="task" size="lg"></app-icon>
