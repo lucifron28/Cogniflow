@@ -21,6 +21,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   { 
+    path: 'notes/folder/:folderId', 
+    component: NotesComponent,
+    canActivate: [authGuard]
+  },
+  { 
     path: 'notes/new', 
     component: NoteEditorComponent,
     canActivate: [authGuard]
