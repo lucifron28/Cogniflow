@@ -6,7 +6,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm mb-1 opacity-60">Total Notes</p>
-                    <p class="text-3xl font-bold text-glow">0</p>
+                    <p class="text-3xl font-bold text-glow">{{ stats.totalNotes }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-lg flex items-center justify-center"
                     style="background-color: rgba(0, 242, 254, 0.1);">
@@ -20,7 +20,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm mb-1 opacity-60">Study Time</p>
-                    <p class="text-3xl font-bold text-glow">0h</p>
+                    <p class="text-3xl font-bold text-glow">{{ formatStudyTime(stats.studyTimeMinutes) }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-lg flex items-center justify-center"
                     style="background-color: rgba(34, 197, 94, 0.1);">
@@ -33,7 +33,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm mb-1 opacity-60">Active Streak</p>
-                    <p class="text-3xl font-bold text-glow">0 days</p>
+                    <p class="text-3xl font-bold text-glow">{{ stats.activeStreak }} days</p>
                 </div>
                 <div class="w-12 h-12 rounded-lg flex items-center justify-center"
                     style="background-color: rgba(249, 115, 22, 0.1);">
@@ -47,11 +47,53 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm mb-1 opacity-60">Tags Used</p>
-                    <p class="text-3xl font-bold text-glow">0</p>
+                    <p class="text-3xl font-bold text-glow">{{ stats.tagsUsed }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-lg flex items-center justify-center"
                     style="background-color: rgba(168, 85, 247, 0.1);">
                     <app-icon name="tag" size="lg" customClass="text-purple-500"></app-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.4)] transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm mb-1 opacity-60">Notes This Week</p>
+                    <p class="text-2xl font-bold text-glow">{{ stats.notesThisWeek }}</p>
+                </div>
+                <div class="w-10 h-10 rounded flex items-center justify-center"
+                    style="background-color: rgba(59, 130, 246, 0.1);">
+                    <app-icon name="calendar" size="md" customClass="text-blue-400"></app-icon>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.4)] transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm mb-1 opacity-60">Notes This Month</p>
+                    <p class="text-2xl font-bold text-glow">{{ stats.notesThisMonth }}</p>
+                </div>
+                <div class="w-10 h-10 rounded flex items-center justify-center"
+                    style="background-color: rgba(34, 197, 94, 0.1);">
+                    <app-icon name="chart-bar" size="md" customClass="text-green-400"></app-icon>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-6 rounded-lg hover:shadow-[0_0_35px_rgba(0,242,254,0.4)] transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm mb-1 opacity-60">Tasks Completed</p>
+                    <p class="text-2xl font-bold text-glow">{{ stats.completedTasks }} / {{ stats.totalTasks }}</p>
+                </div>
+                <div class="w-10 h-10 rounded flex items-center justify-center"
+                    style="background-color: rgba(34, 197, 94, 0.1);">
+                    <app-icon name="task-completed" size="md" customClass="text-green-400"></app-icon>
                 </div>
             </div>
         </div>
@@ -77,8 +119,26 @@
 
     <div class="mt-6 card p-6 rounded-lg">
         <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
+        @if (recentActivities.length === 0) {
         <div class="text-center py-8">
             <p class="opacity-50">No activity to display yet</p>
         </div>
+        } @else {
+        <div class="space-y-3">
+            @for (activity of recentActivities; track activity.timestamp) {
+            <div class="flex items-center gap-3 p-3 rounded hover:bg-white/5 transition-colors">
+                <div class="w-8 h-8 rounded flex items-center justify-center"
+                    [style.background-color]="'rgba(0, 242, 254, 0.1)'">
+                    <app-icon [name]="getActivityIcon(activity.type)" size="sm"
+                        [customClass]="getActivityColor(activity.type)"></app-icon>
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm">{{ activity.details }}</p>
+                    <p class="text-xs opacity-50">{{ formatTimestamp(activity.timestamp) }}</p>
+                </div>
+            </div>
+            }
+        </div>
+        }
     </div>
 </div>
