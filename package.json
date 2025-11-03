@@ -33,6 +33,7 @@
     "@datorama/akita": "^8.0.1",
     "@tailwindcss/postcss": "^4.1.14",
     "@types/prismjs": "^1.26.5",
+    "daisyui": "^5.4.2",
     "firebase": "^12.4.0",
     "fuse.js": "^7.1.0",
     "marked": "^16.4.0",
