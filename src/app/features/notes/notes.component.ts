@@ -24,24 +24,19 @@ export class NotesComponent implements OnInit, OnDestroy {
   isLoading = signal(true);
   errorMessage = signal<string | null>(null);
   
-  // Current folder (null = root/all notes)
   currentFolderId = signal<string | null>(null);
   
-  // Sorting
   sortBy = signal<'updatedAt' | 'createdAt' | 'title' | 'wordCount'>('updatedAt');
   sortOrder = signal<'asc' | 'desc'>('desc');
   
-  // View mode
   viewMode = signal<'grid' | 'list'>('grid');
   
-  // Keyboard navigation
   selectedIndex = signal<number>(-1);
   
-  // Breadcrumb path
   breadcrumbs = computed(() => {
     const folderId = this.currentFolderId();
     if (!folderId) {
-      return []; // Empty array when viewing all notes
+      return [];
     }
     
     const folders = this.allFolders();
@@ -63,19 +58,14 @@ export class NotesComponent implements OnInit, OnDestroy {
     return path;
   });
   
-  // Computed filtered and sorted notes
   filteredNotes = computed(() => {
     let notes = [...this.allNotes()];
     const folderId = this.currentFolderId();
     
-    // Filter by folder
     if (folderId) {
-      // Show only notes in this specific folder
       notes = notes.filter(note => note.folderId === folderId);
     }
-    // If no folder selected, show ALL notes (don't filter)
     
-    // Sort
     const sortField = this.sortBy();
     const order = this.sortOrder();
     
@@ -102,7 +92,6 @@ export class NotesComponent implements OnInit, OnDestroy {
   });
   
   constructor() {
-    // Watch for route param changes
     effect(() => {
       this.route.params.subscribe(params => {
         this.currentFolderId.set(params['folderId'] || null);
@@ -115,14 +104,12 @@ export class NotesComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy() {
-    // Cleanup if needed
   }
 
   private loadData() {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    // Subscribe to folders
     this.folderService.getFolders().subscribe({
       next: (folders) => {
         this.allFolders.set(folders);
@@ -132,7 +119,6 @@ export class NotesComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Subscribe to notes metadata (real-time updates)
     this.notesService.getNotesMetadata().subscribe({
       next: (notes) => {
         this.allNotes.set(notes);
@@ -148,7 +134,6 @@ export class NotesComponent implements OnInit, OnDestroy {
   
   onSortChange(field: 'updatedAt' | 'createdAt' | 'title' | 'wordCount') {
     if (this.sortBy() === field) {
-      // Toggle order if same field
       this.sortOrder.set(this.sortOrder() === 'desc' ? 'asc' : 'desc');
     } else {
       this.sortBy.set(field);
@@ -172,26 +157,22 @@ export class NotesComponent implements OnInit, OnDestroy {
     return date.toLocaleDateString();
   }
   
-  // Keyboard shortcuts
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     const notes = this.filteredNotes();
     if (notes.length === 0) return;
     
-    // Ignore if user is typing in an input/textarea
     const target = event.target as HTMLElement;
     if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
       return;
     }
     
-    // Cmd/Ctrl + N: New note
     if ((event.metaKey || event.ctrlKey) && event.key === 'n') {
       event.preventDefault();
       this.router.navigate(['/notes/new']);
       return;
     }
     
-    // Arrow navigation
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       event.preventDefault();
       const currentIndex = this.selectedIndex();
@@ -210,7 +191,6 @@ export class NotesComponent implements OnInit, OnDestroy {
       return;
     }
     
-    // Enter: Open selected note
     if (event.key === 'Enter' && this.selectedIndex() >= 0) {
       event.preventDefault();
       const selectedNote = notes[this.selectedIndex()];
@@ -220,7 +200,6 @@ export class NotesComponent implements OnInit, OnDestroy {
       return;
     }
     
-    // Delete: Delete selected note (with confirmation)
     if (event.key === 'Delete' && this.selectedIndex() >= 0) {
       event.preventDefault();
       const selectedNote = notes[this.selectedIndex()];
@@ -232,7 +211,6 @@ export class NotesComponent implements OnInit, OnDestroy {
   }
   
   private scrollToSelectedNote(index: number) {
-    // Scroll the selected card into view
     setTimeout(() => {
       const cards = document.querySelectorAll('.note-card');
       const selectedCard = cards[index] as HTMLElement;
@@ -247,7 +225,6 @@ export class NotesComponent implements OnInit, OnDestroy {
     if (confirmed) {
       try {
         await this.notesService.deleteNote(note.id);
-        // Reset selection
         this.selectedIndex.set(-1);
       } catch (error) {
         console.error('Error deleting note:', error);
