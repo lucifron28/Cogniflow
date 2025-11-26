@@ -79,7 +79,6 @@ export class NoteEditorComponent implements OnInit, AfterViewChecked, OnDestroy 
   constructor() {
     const renderer = new marked.Renderer();
     
-    // Fix for marked v16+: Custom list renderer that properly handles inline formatting
     renderer.listitem = function(item: any) {
       const { task, checked, tokens } = item;
       
