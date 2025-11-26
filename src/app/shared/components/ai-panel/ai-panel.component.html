@@ -1,7 +1,9 @@
 <!-- AI Panel Overlay with Resizable Width -->
-<div class="fixed right-0 top-0 h-full bg-gray-900 border-l border-cyan-500/30 shadow-2xl z-40 flex transform transition-transform duration-300"
+<div class="fixed right-0 top-0 h-full border-l shadow-2xl z-40 flex transform transition-transform duration-300"
     [class.translate-x-0]="isVisible()" [class.translate-x-full]="!isVisible()" [style.width.px]="panelWidth()"
-    [class.cursor-col-resize]="isResizing()">
+    [class.cursor-col-resize]="isResizing()"
+    [style.background-color]="(themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? '#111827' : '#ffffff'"
+    [style.border-left-color]="(themeService.theme() === 'cyber-glow') ? 'rgba(6, 182, 212, 0.3)' : (themeService.theme() === 'dark') ? 'rgba(75, 85, 99, 0.5)' : 'rgba(229, 231, 235, 1)'">
 
     <!-- Resize Handle (Left Edge) -->
     <div #resizeHandle (mousedown)="onMouseDown($event)"
@@ -15,8 +17,9 @@
     <!-- Panel Content -->
     <div class="flex flex-col w-full ml-1">
         <!-- Header -->
-        <div
-            class="flex items-center justify-between p-4 border-b border-gray-800 bg-gray-900/80 backdrop-blur-sm flex-shrink-0">
+        <div class="flex items-center justify-between p-4 border-b backdrop-blur-sm flex-shrink-0"
+            [style.border-bottom-color]="(themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? 'rgb(31, 41, 55)' : 'rgb(229, 231, 235)'"
+            [style.background-color]="(themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? 'rgba(17, 24, 39, 0.8)' : 'rgba(255, 255, 255, 0.8)'">
             <div class="flex items-center gap-2">
                 <!-- Robot Icon SVG -->
                 <svg class="w-5 h-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -27,19 +30,26 @@
                     <path d="M9 16h6" />
                     <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                 </svg>
-                <h2 class="text-lg font-semibold text-cyan-400">Lucid Chat</h2>
+                <h2 class="text-lg font-semibold"
+                    [style.color]="(themeService.theme() === 'cyber-glow') ? 'rgb(34, 211, 238)' : (themeService.theme() === 'electric-sky') ? 'rgb(139, 92, 246)' : (themeService.theme() === 'dark') ? 'rgb(156, 163, 175)' : 'rgb(31, 41, 55)'">
+                    Lucid Chat</h2>
             </div>
             <div class="flex items-center gap-2">
-                <button (click)="clearChat()"
-                    class="text-gray-400 hover:text-cyan-400 transition-colors p-1 rounded hover:bg-gray-800"
-                    title="Clear chat">
+                <button (click)="clearChat()" class="transition-colors p-1 rounded"
+                    [style.color]="(themeService.theme() === 'light' || themeService.theme() === 'electric-sky') ? 'rgb(107, 114, 128)' : 'rgb(156, 163, 175)'"
+                    [style.background-color]="'transparent'" title="Clear chat"
+                    [class.hover:text-cyan-400]="themeService.theme() === 'cyber-glow'"
+                    [class.hover:bg-gray-800]="themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark'"
+                    [class.hover:bg-gray-100]="themeService.theme() === 'light' || themeService.theme() === 'electric-sky'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                 </button>
-                <button (click)="onClose()"
-                    class="text-gray-400 hover:text-white transition-colors p-1 rounded hover:bg-gray-800">
+                <button (click)="onClose()" class="transition-colors p-1 rounded"
+                    [style.color]="(themeService.theme() === 'light' || themeService.theme() === 'electric-sky') ? 'rgb(107, 114, 128)' : 'rgb(156, 163, 175)'"
+                    [class.hover:bg-gray-800]="themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark'"
+                    [class.hover:bg-gray-100]="themeService.theme() === 'light' || themeService.theme() === 'electric-sky'">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12" />
@@ -111,9 +121,14 @@
                     <path d="M9 16h6" />
                     <path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                 </svg>
-                <h3 class="text-lg font-semibold text-gray-300 mb-2">Start chatting with Lucid</h3>
-                <p class="text-sm text-gray-500 mb-4">Ask questions, get explanations, or use quick actions above</p>
-                <div class="text-xs text-gray-600 space-y-1">
+                <h3 class="text-lg font-semibold mb-2"
+                    [style.color]="(themeService.theme() === 'light' || themeService.theme() === 'electric-sky') ? 'rgb(75, 85, 99)' : 'rgb(209, 213, 219)'">
+                    Start chatting with Lucid</h3>
+                <p class="text-sm mb-4"
+                    [style.color]="(themeService.theme() === 'light' || themeService.theme() === 'electric-sky') ? 'rgb(107, 114, 128)' : 'rgb(107, 114, 128)'">
+                    Ask questions, get explanations, or use quick actions above</p>
+                <div class="text-xs space-y-1"
+                    [style.color]="(themeService.theme() === 'light' || themeService.theme() === 'electric-sky') ? 'rgb(75, 85, 99)' : 'rgb(75, 85, 99)'">
                     <p>💡 Try: "Explain this in simple terms"</p>
                     <p>📝 Try: "Create a study guide"</p>
                     <p>🤔 Try: "What are the key concepts?"</p>
@@ -153,16 +168,16 @@
                             [class.text-purple-400]="message.role === 'assistant'">
                             {{ message.role === 'user' ? 'You' : 'Lucid' }}
                         </span>
-                        <span class="text-xs text-gray-500">
+                        <span class="text-xs"
+                            [style.color]="(themeService.theme() === 'light' || themeService.theme() === 'electric-sky') ? 'rgb(107, 114, 128)' : 'rgb(107, 114, 128)'">
                             {{ message.timestamp.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) }}
                         </span>
                     </div>
-                    <div class="rounded-lg p-3 markdown-preview overflow-x-auto"
-                        [class.bg-cyan-600/20]="message.role === 'user'" [class.border]="message.role === 'user'"
-                        [class.border-cyan-500/30]="message.role === 'user'"
-                        [class.bg-gray-800/50]="message.role === 'assistant'"
-                        [class.border]="message.role === 'assistant'"
-                        [class.border-gray-700]="message.role === 'assistant'" [innerHTML]="message.htmlContent">
+                    <div class="rounded-lg p-3 markdown-preview overflow-x-auto border"
+                        [style.background-color]="message.role === 'user' ? 'rgba(8, 145, 178, 0.2)' : ((themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? 'rgba(31, 41, 55, 0.5)' : 'rgba(243, 244, 246, 1)')"
+                        [style.border-color]="message.role === 'user' ? 'rgba(6, 182, 212, 0.3)' : ((themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? 'rgb(55, 65, 81)' : 'rgb(209, 213, 219)')"
+                        [style.color]="(themeService.theme() === 'light' || themeService.theme() === 'electric-sky') ? 'rgb(31, 41, 55)' : 'rgb(243, 244, 246)'"
+                        [innerHTML]="message.htmlContent">
                     </div>
                 </div>
             </div>
@@ -181,10 +196,14 @@
                     </svg>
                 </div>
                 <div class="flex-1">
-                    <div class="bg-gray-800/50 border border-gray-700 rounded-lg p-3">
+                    <div class="border rounded-lg p-3"
+                        [style.background-color]="(themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? 'rgba(31, 41, 55, 0.5)' : 'rgba(243, 244, 246, 1)'"
+                        [style.border-color]="(themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? 'rgb(55, 65, 81)' : 'rgb(209, 213, 219)'">
                         <div class="flex items-center gap-2">
                             <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-cyan-400"></div>
-                            <span class="text-sm text-gray-400">Lucid is thinking...</span>
+                            <span class="text-sm"
+                                [style.color]="(themeService.theme() === 'light' || themeService.theme() === 'electric-sky') ? 'rgb(107, 114, 128)' : 'rgb(156, 163, 175)'">Lucid
+                                is thinking...</span>
                         </div>
                     </div>
                 </div>
@@ -213,11 +232,16 @@
         </div>
 
         <!-- Input Area -->
-        <div class="border-t border-gray-800 p-4 bg-gray-900/50 flex-shrink-0">
+        <div class="border-t p-4 flex-shrink-0"
+            [style.border-top-color]="(themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? 'rgb(31, 41, 55)' : 'rgb(229, 231, 235)'"
+            [style.background-color]="(themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? 'rgba(17, 24, 39, 0.5)' : 'rgba(255, 255, 255, 0.5)'">
             <div class="flex gap-2">
                 <input type="text" [(ngModel)]="userMessage" (keydown.enter)="onSendMessage()" [disabled]="isLoading()"
                     placeholder="Ask Lucid anything..."
-                    class="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed text-sm">
+                    class="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                    [style.background-color]="(themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? 'rgb(31, 41, 55)' : 'rgb(255, 255, 255)'"
+                    [style.border-color]="(themeService.theme() === 'cyber-glow' || themeService.theme() === 'dark') ? 'rgb(55, 65, 81)' : 'rgb(209, 213, 219)'"
+                    [style.color]="(themeService.theme() === 'light' || themeService.theme() === 'electric-sky') ? 'rgb(31, 41, 55)' : 'rgb(255, 255, 255)'">
                 <button (click)="onSendMessage()" [disabled]="isLoading() || !userMessage().trim()"
                     class="px-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed rounded-lg transition-all duration-200 text-white font-medium">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,7 +250,9 @@
                     </svg>
                 </button>
             </div>
-            <p class="text-xs text-gray-500 mt-2">Press Enter to send • Drag left edge to resize</p>
+            <p class="text-xs mt-2"
+                [style.color]="(themeService.theme() === 'light' || themeService.theme() === 'electric-sky') ? 'rgb(107, 114, 128)' : 'rgb(107, 114, 128)'">
+                Press Enter to send • Drag left edge to resize</p>
         </div>
     </div>
 </div>
