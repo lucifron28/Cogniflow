@@ -46,6 +46,18 @@
   box-shadow: 0 0 25px rgba(0, 242, 254, 0.8);
 }
 
+/* Dark Theme (Normal Dark Mode) */
+.dark {
+  background-color: #1f2937;
+  color: #f3f4f6;
+}
+
+/* Light Theme (Normal Light Mode) */
+.light {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
 /* Electric Sky (Light Mode) */
 .electric-sky {
   background-color: #fdfbfb;
@@ -68,10 +80,30 @@
   box-shadow: 0 0 35px rgba(0, 242, 254, 0.6);
 }
 
-/* Text Glow Effects */
-.text-glow {
+/* Text Glow Effects - Only for cyber-glow theme */
+:root.cyber-glow .text-glow,
+.cyber-glow .text-glow {
   color: #00f2fe;
   text-shadow: 0 0 10px #00f2fe, 0 0 20px #00f2fe;
+}
+
+/* Remove glow effect for other themes */
+:root.dark .text-glow,
+.dark .text-glow {
+  color: inherit;
+  text-shadow: none;
+}
+
+:root.light .text-glow,
+.light .text-glow {
+  color: inherit;
+  text-shadow: none;
+}
+
+:root.electric-sky .text-glow,
+.electric-sky .text-glow {
+  color: inherit;
+  text-shadow: none;
 }
 
 /* Theme-aware styles */
@@ -81,6 +113,22 @@
   border: 1px solid var(--color-cyber-accent) !important;
   box-shadow: 0 10px 15px -3px rgba(0, 242, 254, 0.2), 0 4px 6px -2px rgba(0, 242, 254, 0.1) !important;
   color: var(--color-cyber-accent);
+}
+
+:root.dark .card,
+.dark .card {
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+  color: #f3f4f6;
+}
+
+:root.light .card,
+.light .card {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  color: #1f2937;
 }
 
 :root.electric-sky .card,
@@ -103,6 +151,34 @@
 :root.cyber-glow .btn-primary:hover,
 .cyber-glow .btn-primary:hover {
   box-shadow: 0 0 25px rgba(0, 242, 254, 0.8);
+}
+
+:root.dark .btn-primary,
+.dark .btn-primary {
+  background-color: #3b82f6;
+  border: 1px solid #2563eb;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+:root.dark .btn-primary:hover,
+.dark .btn-primary:hover {
+  background-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+:root.light .btn-primary,
+.light .btn-primary {
+  background-color: #3b82f6;
+  border: 1px solid #2563eb;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+:root.light .btn-primary:hover,
+.light .btn-primary:hover {
+  background-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 :root.electric-sky .btn-primary,
