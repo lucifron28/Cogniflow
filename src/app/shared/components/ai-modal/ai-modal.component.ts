@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AIService, QuizQuestion } from '../../../core/services/ai.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 type AIAction = 'summarize' | 'explain' | 'quiz' | 'tags';
 
@@ -19,6 +20,8 @@ export class AiModalComponent {
   @Output() close = new EventEmitter<void>();
   @Output() tagsGenerated = new EventEmitter<string[]>();
 
+  public themeService = inject(ThemeService);
+  
   isLoading = signal(false);
   currentAction = signal<AIAction | null>(null);
   result = signal<string>('');
