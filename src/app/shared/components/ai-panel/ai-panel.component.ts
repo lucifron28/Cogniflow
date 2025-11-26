@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, Output, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, ViewChild, ElementRef, AfterViewChecked, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked, Marked } from 'marked';
 import { AIService, QuizQuestion } from '../../../core/services/ai.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -31,6 +32,8 @@ export class AiPanelComponent implements AfterViewChecked {
   @Output() close = new EventEmitter<void>();
   @Output() tagsGenerated = new EventEmitter<string[]>();
 
+  public themeService = inject(ThemeService);
+  
   isVisible = signal(true);
   isLoading = signal(false);
   currentAction = signal<AIAction>('chat');
