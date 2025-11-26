@@ -1,28 +1,49 @@
-<button (click)="themeService.toggleTheme()"
-    class="relative w-14 h-7 rounded-full transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-cyber-accent cursor-pointer"
-    [class.bg-cyber-dark-blue]="themeService.theme() === 'cyber-glow'"
-    [class.bg-electric-soft-blue]="themeService.theme() === 'electric-sky'"
-    [class.border-cyber-accent/30]="themeService.theme() === 'cyber-glow'"
-    [class.border-electric-neon/30]="themeService.theme() === 'electric-sky'"
-    [attr.aria-label]="themeService.isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
+<div class="relative">
+    <!-- Dropdown Button -->
+    <button (click)="toggleDropdown($event)"
+        class="flex items-center gap-2 px-3 py-2 rounded-lg border transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2"
+        [class.bg-cyber-dark-blue]="themeService.theme() === 'cyber-glow'"
+        [class.border-cyber-accent]="themeService.theme() === 'cyber-glow'"
+        [class.text-cyber-accent]="themeService.theme() === 'cyber-glow'"
+        [class.focus:ring-cyber-accent]="themeService.theme() === 'cyber-glow'"
+        [class.bg-gray-800]="themeService.theme() === 'dark'" [class.border-gray-600]="themeService.theme() === 'dark'"
+        [class.text-gray-100]="themeService.theme() === 'dark'"
+        [class.focus:ring-gray-500]="themeService.theme() === 'dark'"
+        [class.bg-white]="themeService.theme() === 'light'" [class.border-gray-300]="themeService.theme() === 'light'"
+        [class.text-gray-700]="themeService.theme() === 'light'"
+        [class.focus:ring-blue-500]="themeService.theme() === 'light'"
+        [class.bg-white]="themeService.theme() === 'electric-sky'"
+        [class.border-blue-300]="themeService.theme() === 'electric-sky'"
+        [class.text-blue-600]="themeService.theme() === 'electric-sky'"
+        [class.focus:ring-blue-400]="themeService.theme() === 'electric-sky'" [attr.aria-label]="'Select theme'">
 
-    <span
-        class="absolute top-0.5 left-0.5 w-6 h-6 rounded-full transition-all duration-300 flex items-center justify-center"
-        [class.translate-x-7]="themeService.theme() === 'electric-sky'"
-        [class.bg-cyber-accent]="themeService.theme() === 'cyber-glow'"
-        [class.bg-electric-neon]="themeService.theme() === 'electric-sky'"
-        [class.shadow-[0_0_15px_rgba(0,242,254,0.8)]]="themeService.theme() === 'cyber-glow'">
+        <app-icon [name]="themeService.getCurrentThemeOption().icon" size="sm"></app-icon>
+        <span class="text-sm font-medium">{{ themeService.getCurrentThemeOption().label }}</span>
 
-        @if (themeService.theme() === 'cyber-glow') {
-        <div class="flex items-center justify-center w-full h-full">
-            <app-icon name="moon" size="sm" customClass="text-cyber-black"></app-icon>
-        </div>
+        <!-- Dropdown arrow -->
+        <svg class="w-4 h-4 transition-transform duration-200" [class.rotate-180]="isDropdownOpen()" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </button>
+
+    @if (isDropdownOpen()) {
+    <div class="absolute w-48 rounded-lg shadow-lg border overflow-hidden bg-white border-gray-200"
+        style="left: 0 !important; bottom: 100% !important; margin-bottom: 0.5rem !important; z-index: 9999 !important; position: absolute !important;">
+
+        @for (themeOption of themeService.availableThemes; track themeOption.value) {
+        <button (click)="selectTheme(themeOption.value, $event)"
+            class="w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-150 text-left text-gray-900 hover:bg-gray-50"
+            [class.bg-gray-100]="themeService.theme() === themeOption.value">
+
+            <app-icon [name]="themeOption.icon" size="sm"></app-icon>
+            <span class="flex-1 font-medium">{{ themeOption.label }}</span>
+
+            @if (themeService.theme() === themeOption.value) {
+            <app-icon name="check-circle" size="sm" customClass="text-blue-500"></app-icon>
+            }
+        </button>
         }
-
-        @if (themeService.theme() === 'electric-sky') {
-        <div class="flex items-center justify-center w-full h-full">
-            <app-icon name="sun" size="sm" customClass="text-electric-dark-blue"></app-icon>
-        </div>
-        }
-    </span>
-</button>
+    </div>
+    }
+</div>
