@@ -205,3 +205,131 @@
 :host-context(.electric-sky) .logo-brain {
   animation: pulse-glow-light 3s ease-in-out infinite;
 }
+
+/* Dark Theme Styles */
+:host-context(.dark) .sidebar {
+  background: #1f2937 !important;
+  border-right-color: #4b5563 !important;
+  color: #f3f4f6 !important;
+}
+
+:host-context(.dark) .sidebar-header,
+:host-context(.dark) .sidebar-footer {
+  border-color: #374151 !important;
+}
+
+:host-context(.dark) .sidebar-content {
+  scrollbar-color: #6b7280 transparent !important;
+  color: #f3f4f6 !important;
+}
+
+:host-context(.dark) .sidebar-content::-webkit-scrollbar-thumb {
+  background-color: #6b7280 !important;
+}
+
+:host-context(.dark) .resize-handle:hover,
+:host-context(.dark) .resize-handle.resizing {
+  background-color: #6b7280 !important;
+}
+
+:host-context(.dark) .sidebar button.hover-bg {
+  background-color: rgba(107, 114, 128, 0.1) !important;
+}
+
+:host-context(.dark) .nav-section-border {
+  border-top-color: #374151 !important;
+}
+
+:host-context(.dark) .sidebar a.nav-link {
+  background-color: rgba(107, 114, 128, 0.05) !important;
+}
+
+:host-context(.dark) .sidebar a:hover {
+  background-color: rgba(107, 114, 128, 0.15) !important;
+}
+
+:host-context(.dark) .logo-bracket,
+:host-context(.dark) .logo-bracket-small {
+  color: #9ca3af !important;
+  text-shadow: none !important;
+}
+
+:host-context(.dark) .logo-brain {
+  color: #9ca3af !important;
+  filter: none !important;
+  animation: none !important;
+}
+
+/* Light Theme Styles */
+:host-context(.light) .sidebar {
+  background: #ffffff !important;
+  border-right-color: #e5e7eb !important;
+  color: #1f2937 !important;
+}
+
+:host-context(.light) .sidebar-header,
+:host-context(.light) .sidebar-footer {
+  border-color: #e5e7eb !important;
+}
+
+:host-context(.light) .sidebar-header h2 {
+  color: #1f2937 !important;
+  text-shadow: none !important;
+}
+
+:host-context(.light) .sidebar-content {
+  scrollbar-color: #d1d5db transparent !important;
+  color: #1f2937 !important;
+}
+
+:host-context(.light) .sidebar-content::-webkit-scrollbar-thumb {
+  background-color: #d1d5db !important;
+}
+
+:host-context(.light) .resize-handle:hover,
+:host-context(.light) .resize-handle.resizing {
+  background-color: #d1d5db !important;
+}
+
+:host-context(.light) .sidebar-section button,
+:host-context(.light) .sidebar-section span,
+:host-context(.light) .sidebar-section p {
+  color: #4b5563 !important;
+}
+
+:host-context(.light) .sidebar svg {
+  color: #4b5563 !important;
+}
+
+:host-context(.light) .sidebar a {
+  color: #1f2937 !important;
+}
+
+:host-context(.light) .sidebar a:hover {
+  background-color: rgba(229, 231, 235, 0.5) !important;
+}
+
+:host-context(.light) .sidebar button.hover-bg {
+  background-color: rgba(229, 231, 235, 0.3) !important;
+}
+
+:host-context(.light) .nav-section-border {
+  border-top-color: #e5e7eb !important;
+}
+
+:host-context(.light) .sidebar a.nav-link {
+  background-color: rgba(229, 231, 235, 0.2) !important;
+}
+
+:host-context(.light) .logo-bracket,
+:host-context(.light) .logo-bracket-small {
+  color: #3b82f6 !important;
+  text-shadow: none !important;
+}
+
+:host-context(.light) .logo-brain {
+  color: #3b82f6 !important;
+  filter: none !important;
+  animation: none !important;
+}
+
